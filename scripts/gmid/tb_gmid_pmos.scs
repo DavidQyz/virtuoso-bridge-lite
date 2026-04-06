@@ -1,0 +1,35 @@
+// tb_gmid_pmos.scs
+// ─────────────────────────────────────────────────────────────────────────────
+// gm/ID 特征化 testbench — PMOS (tsmc18 / pch 或 pch_mac)
+//
+// 注意 PMOS 极性：
+//   VGS < 0，用 VSG = VDD - VGS 扫描更直观
+//   所有电流方向与 NMOS 相反
+// ─────────────────────────────────────────────────────────────────────────────
+
+simulator lang=spectre
+global 0
+
+include "@@PDK_MODELS@@" section=@@PDK_SECTION@@
+
+parameters VDD=1.8 VSG_BIAS=0.9 W=10u L=180n
+
+// PMOS：source 接 VDD，gate 从 VDD → 0 扫描 (VSG = 0 → VDD)
+//
+//   VDD
+//    │
+//   S│
+//   G┤ M0  (pch W=W L=L)
+//    D│
+//   VDS_BIAS (= VDD - VSG_BIAS)
+
+vdd  (vdd 0)   vsource dc=VDD
+vgs  (vgs 0)   vsource dc=VDD    // gate 电位，被扫描；VSG = VDD - vgs
+vsd  (vsd 0)   vsource dc=VSG_BIAS   // source-drain 固定电压
+
+M0 (vsd vgs vdd vdd) pch w=W l=L
+
+dc dc param=vgs start=0 stop=VDD step=10m
+
+save M0:oppoint
+saveOptions options save=selected

@@ -3,7 +3,8 @@
     "allow": [
       "Bash(uv run python -c ':*)",
       "Bash(uv run:*)",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "WebSearch"
     ],
     "additionalDirectories": [
       "c:\\Users\\qianx\\.claude\\projects\\c--Users-qianx-Documents-GitHub-virtuoso-bridge-lite\\memory"

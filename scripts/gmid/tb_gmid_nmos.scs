@@ -1,0 +1,47 @@
+// tb_gmid_nmos.scs
+// ─────────────────────────────────────────────────────────────────────────────
+// gm/ID 特征化 testbench — NMOS (tsmc18 / nch 或 nch_mac)
+//
+// 做一个双重扫描：
+//   内层：VGS 从 0 → VDD (步长 10 mV)
+//   外层：L  = 180n, 360n, 500n, 720n, 1u
+//
+// 每个 VGS 点保存操作点参数：ID, gm, gds, cgg
+// 后续 Python 脚本从结果里计算 gm/ID 和 ID/W
+// ─────────────────────────────────────────────────────────────────────────────
+
+simulator lang=spectre
+global 0
+
+// ── PDK include ──────────────────────────────────────────────────────────────
+// 根据实验室 PDK 路径修改此行 (从 Virtuoso 导出的 netlist 里复制)
+include "@@PDK_MODELS@@" section=@@PDK_SECTION@@
+
+// ── 参数 ─────────────────────────────────────────────────────────────────────
+parameters VDD=1.8 VDS_BIAS=0.9 W=10u L=180n
+
+// ── 电路：diode-connected NMOS，固定 VDS ─────────────────────────────────────
+//
+//   VGS 由 vgs 电压源设置 (DC 扫描)
+//   VDS 固定 = VDS_BIAS (= VDD/2，弱化 CLM 影响)
+//
+//           VDS_BIAS
+//              │
+//             D│
+//   vgs ──── G┤ M0  (nch W=W L=L)
+//              S│
+//              GND
+
+vgs  (vgs 0) vsource dc=0   // 被扫描的 gate 电压
+vds  (vd  0) vsource dc=VDS_BIAS
+
+M0 (vd vgs 0 0) nch w=W l=L
+
+// ── 仿真命令 ─────────────────────────────────────────────────────────────────
+// 扫描 VGS：0 → VDD，每 10 mV 一步
+// 外层参数扫描不同 L 由 Python 控制（每次替换 L= 参数重跑）
+dc dc param=vgs start=0 stop=VDD step=10m
+
+// 保存操作点（gm, gds, id, cgg 等）
+save M0:oppoint
+saveOptions options save=selected
