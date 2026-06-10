@@ -1,0 +1,24 @@
+// 5T OTA characterization stim=diff - tsmc18 BCD gen2, ideal bias
+simulator lang=spectre
+global 0
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=pre_simu
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=tt_lib
+
+Vdd   (vdd   0)     vsource dc=1.8 mag=0
+Vcm   (vincm 0)     vsource dc=0.9 mag=0
+Vbias (vbias 0)     vsource dc=0.63
+Vinp  (vinp  vincm) vsource dc=0 mag=1
+
+Lfb (vout vinn)  inductor l=1T
+Cac (vinn vincm) capacitor c=1T
+
+M1 (vx    vinp vtail 0)   nch_mac w=3.0u l=1.0u nf=1
+M2 (vout  vinn vtail 0)   nch_mac w=3.0u l=1.0u nf=1
+M3 (vx    vx   vdd   vdd) pch_mac w=6.0u l=1.0u nf=1
+M4 (vout  vx   vdd   vdd) pch_mac w=6.0u l=1.0u nf=1
+M5 (vtail vbias 0    0)   nch_mac w=5.0u l=1.0u nf=1
+CL (vout 0) capacitor c=1.0p
+
+save vout
+opInfo info what=oppoint where=rawfile
+ac ac start=1 stop=10G dec=40
