@@ -1,0 +1,92 @@
+# =============================================================================
+# AUTHORITATIVE SOURCE OF TRUTH for the folded-cascode OTA schematic figure.
+# Pipeline: natural language -> THIS yaml -> render_schematic.py -> svg/png.
+# To change the figure, EDIT THIS FILE and re-render. Never hand-edit the SVG,
+# never re-derive the figure by "looking at" the PNG.
+# =============================================================================
+meta:
+  title: Folded-cascode PMOS-input OTA
+  one_liner: PMOS input pair folded into NMOS cascode, self-biased PMOS cascode mirror load.
+  visible_internal_structure:
+    - 11 MOSFET symbols, labelled M0..M10
+    - VDD / VSS power rails
+    - signal wires with junction dots
+    - ideal-bias gate pins (Vb_tail / Vb_pc / Vb_nc / Vb_n) and I/O ports (VIN+ / VIN- / OUT)
+  omitted_details:
+    - W/L sizes (kept in fc_ota.py, not on this figure)
+    - bulk / substrate pins (PMOS bulk->VDD, NMOS bulk->VSS, drawn implicitly)
+    - internal node net names (nA, nB, nA2, ntail... shown as wires only)
+  conventions:
+    pmos: "red symbol; SOURCE = top terminal (to VDD or tail)"
+    nmos: "blue symbol; SOURCE = bottom terminal (to VSS)"
+    gate: "side terminal; left/right per device"
+    mirror_gate_bus: "nA2 node routes over the top to M9 & M10 gates; where it crosses VDD stubs there is NO dot = no connect"
+    label_rule: "only device names Mx are drawn; no sizes; internal nets unlabelled"
+  exports:
+    svg: ota5t/fc_schematic.svg
+    png: ota5t/fc_schematic.png
+  figma:
+    sync_status: "not synced (no Figma MCP in this environment); local SVG is authoritative; import SVG into Figma"
+
+canvas: {xlim: [0, 12], ylim: [0, 11], figsize: [12.2, 11], title_y: 10.85}
+
+rails:
+  - {net: VDD, y: 10.3, x0: 1.0, x1: 11.0}
+  - {net: VSS, y: 0.8,  x0: 1.0, x1: 11.0}
+
+# kind: pmos|nmos ; gate: left|right (which side the gate lead exits) ;
+# label: right|left (which side the Mx name sits). terminals are derived:
+#   pmos -> top=source bot=drain ; nmos -> top=drain bot=source.
+devices:
+  - {name: M0,  kind: pmos, x: 6.0, y: 9.0, gate: left,  label: right, role: tail}
+  - {name: M9,  kind: pmos, x: 2.6, y: 9.0, gate: left,  label: right, role: mirror-ref}
+  - {name: M10, kind: pmos, x: 9.4, y: 9.0, gate: right, label: left,  role: mirror-out}
+  - {name: M7,  kind: pmos, x: 2.6, y: 7.5, gate: left,  label: right, role: pcascode-L}
+  - {name: M8,  kind: pmos, x: 9.4, y: 7.5, gate: right, label: left,  role: pcascode-R}
+  - {name: M1,  kind: pmos, x: 4.8, y: 7.5, gate: left,  label: right, role: input+}
+  - {name: M2,  kind: pmos, x: 7.2, y: 7.5, gate: right, label: left,  role: input-}
+  - {name: M5,  kind: nmos, x: 2.6, y: 5.0, gate: left,  label: right, role: ncascode-L}
+  - {name: M6,  kind: nmos, x: 9.4, y: 5.0, gate: right, label: left,  role: ncascode-R}
+  - {name: M3,  kind: nmos, x: 2.6, y: 3.0, gate: left,  label: right, role: sink-L}
+  - {name: M4,  kind: nmos, x: 9.4, y: 3.0, gate: right, label: left,  role: sink-R}
+
+rail_connections:
+  VDD: [M0.top, M9.top, M10.top]
+  VSS: [M3.bot, M4.bot]
+
+# Each path point is either "Dev.term" (resolved to coords) or [x, y] waypoint.
+wires:
+  - {net: ntail, path: [M1.top, [4.8, 8.2], [7.2, 8.2], M2.top]}
+  - {net: ntail, path: [M0.bot, [6.0, 8.2]]}
+  - {net: nA3,   path: [M9.bot, M7.top]}
+  - {net: nA2,   path: [M7.bot, M5.top]}
+  - {net: nA,    path: [M5.bot, M3.top]}
+  - {net: nB3,   path: [M10.bot, M8.top]}
+  - {net: OUT,   path: [M8.bot, M6.top]}
+  - {net: nB,    path: [M6.bot, M4.top]}
+  - {net: nA,    path: [M1.bot, [4.8, 4.0], [2.6, 4.0]]}
+  - {net: nB,    path: [M2.bot, [7.2, 4.0], [9.4, 4.0]]}
+  - {net: mir,   path: [[2.6, 6.2], [1.2, 6.2], [1.2, 9.7], [10.6, 9.7], [10.6, 9.0], M10.gate]}
+  - {net: mir,   path: [[1.2, 9.0], M9.gate]}
+  - {net: OUT,   path: [[9.4, 6.2], [10.7, 6.2]]}
+
+dots: [[4.8, 8.2], [6.0, 8.2], [7.2, 8.2], [2.6, 4.0], [9.4, 4.0], [2.6, 6.2], [1.2, 9.0], [9.4, 6.2]]
+
+bias_pins:
+  - {at: M0.gate, name: Vb_tail, side: left}
+  - {at: M7.gate, name: Vb_pc,   side: left}
+  - {at: M8.gate, name: Vb_pc,   side: right}
+  - {at: M5.gate, name: Vb_nc,   side: left}
+  - {at: M6.gate, name: Vb_nc,   side: right}
+  - {at: M3.gate, name: Vb_n,    side: left}
+  - {at: M4.gate, name: Vb_n,    side: right}
+
+ports:
+  - {at: M1.gate, name: "VIN+", kind: in}
+  - {at: M2.gate, name: "VIN-", kind: in}
+  - {xy: [10.7, 6.2], name: OUT, kind: out}
+
+notes:
+  - "Left branch M9-M7-M5-M3 is the reference; right branch M10-M8-M6-M4 is the output."
+  - "OUT = M8 drain = M6 drain (single-ended high-impedance node)."
+  - "Input drains fold down (M1->nA, M2->nB) into the NMOS sink/cascode nodes."

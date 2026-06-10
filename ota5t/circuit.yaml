@@ -1,0 +1,57 @@
+# ============================================================================
+# Circuit diagram spec — the single source of truth for the Figma drawing.
+# Natural language -> this YAML -> rendered figure (SVG for Figma / PNG preview).
+# Edit a line here, re-render, and the Figma diagram stays in sync.
+#
+# Coordinate grid: x grows right, y grows up (schematic units). The renderer
+# scales to pixels. Connections are by NET NAME (same name = same node), shown
+# as labelled pin stubs — exactly how the real Virtuoso schematic connects.
+# ============================================================================
+title: "Folded-cascode PMOS-input OTA  ·  tsmc18 1.8V  ·  ideal bias"
+subtitle: "A0 = 74.5 dB   GBW = 22.3 MHz   PM = 78°   PSRR = 60 dB   Itail = 0.91 µA"
+
+rails:
+  - {net: VDD, y: 9.3, label: "VDD = 1.8 V"}
+  - {net: VSS, y: 0.7, label: "VSS"}
+
+# Bias / signal pins drawn faintly (they are ideal sources, not part of core).
+faint_nets: [VDD, VSS, vbtail, vbn, vbnc, vbpc]
+
+# kind: pmos | nmos ;  pins map terminal -> net.  D=top S=bottom G=left B=right.
+devices:
+  # ---- top: PMOS tail + PMOS cascode-mirror load ----
+  - {name: M9,  kind: pmos, role: "mirror L (diode)", x: 2.2, y: 8.0, size: "2u/0.5u",
+     pins: {d: nA3, g: nA2, s: VDD, b: VDD}}
+  - {name: M0,  kind: pmos, role: "tail",            x: 5.0, y: 8.4, size: "4u/1u",
+     pins: {d: ntail, g: vbtail, s: VDD, b: VDD}}
+  - {name: M10, kind: pmos, role: "mirror R",         x: 7.8, y: 8.0, size: "2u/0.5u",
+     pins: {d: nB3, g: nA2, s: VDD, b: VDD}}
+  - {name: M7,  kind: pmos, role: "P-cascode L",      x: 2.2, y: 6.5, size: "2u/0.5u",
+     pins: {d: nA2, g: vbpc, s: nA3, b: VDD}}
+  - {name: M8,  kind: pmos, role: "P-cascode R",      x: 7.8, y: 6.5, size: "2u/0.5u",
+     pins: {d: OUT, g: vbpc, s: nB3, b: VDD}}
+  # ---- middle: PMOS input pair ----
+  - {name: M1,  kind: pmos, role: "in+ ",             x: 4.1, y: 5.0, size: "3u/1u",
+     pins: {d: nA, g: VINP, s: ntail, b: VDD}}
+  - {name: M2,  kind: pmos, role: "in- ",             x: 5.9, y: 5.0, size: "3u/1u",
+     pins: {d: nB, g: VINN, s: ntail, b: VDD}}
+  # ---- bottom: NMOS cascode + current sinks ----
+  - {name: M5,  kind: nmos, role: "N-cascode L",      x: 2.2, y: 3.4, size: "1u/0.5u",
+     pins: {d: nA2, g: vbnc, s: nA, b: VSS}}
+  - {name: M6,  kind: nmos, role: "N-cascode R",      x: 7.8, y: 3.4, size: "1u/0.5u",
+     pins: {d: OUT, g: vbnc, s: nB, b: VSS}}
+  - {name: M3,  kind: nmos, role: "sink L",           x: 2.2, y: 1.8, size: "1u/1u",
+     pins: {d: nA, g: vbn, s: VSS, b: VSS}}
+  - {name: M4,  kind: nmos, role: "sink R",           x: 7.8, y: 1.8, size: "1u/1u",
+     pins: {d: nB, g: vbn, s: VSS, b: VSS}}
+
+# output port marker
+ports:
+  - {net: OUT, x: 9.2, y: 4.9, dir: out}
+  - {net: VINP, x: 3.0, y: 5.0, dir: in}
+  - {net: VINN, x: 7.0, y: 5.0, dir: in}
+
+legend:
+  - "PMOS input pair -> handles very low input common-mode (Vcm=0.3 V)"
+  - "fold into NMOS cascode (M5/M6) + NMOS sinks (M3/M4)"
+  - "self-biased PMOS cascode mirror load (M7-M10) -> high Rout, good PSRR"

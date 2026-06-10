@@ -1,0 +1,37 @@
+// folded-cascode PMOS-input OTA - tsmc18, ideal bias, stim=vdd
+simulator lang=spectre
+global 0
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=pre_simu
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=tt_lib
+
+Vdd   (vdd   0)     vsource dc=1.8 mag=1
+Vcm   (vincm 0)     vsource dc=0.3
+Vbt   (vbtail 0)    vsource dc=1.3
+Vbn   (vbn   0)     vsource dc=0.52
+Vbnc  (vbnc  0)     vsource dc=0.9
+Vbpc  (vbpc  0)     vsource dc=0.95
+Vinp  (vinp  vincm) vsource dc=0 mag=0
+
+// open-loop AC bias: DC short (L) + level-shift sets OUT=vcm+voff; AC open
+Lfb  (out  nls)  inductor l=1T
+Voff (nls  vinn) vsource dc=0.6
+Cac  (vinn vincm) capacitor c=1T
+
+nodeset out=0.8999999999999999 nls=0.8999999999999999 vinn=0.3 ntail=1.6 nA2=1.5 nB2=1.5
+
+M0  (ntail vbtail vdd  vdd)  pch_mac w=4.0u l=1.0u
+M1  (nA    vinp  ntail vdd)  pch_mac w=3.0u l=1.0u nf=1
+M2  (nB    vinn  ntail vdd)  pch_mac w=3.0u l=1.0u nf=1
+M3  (nA    vbn   0     0)    nch_mac w=1.0u l=1.0u
+M4  (nB    vbn   0     0)    nch_mac w=1.0u l=1.0u
+M5  (nA2   vbnc  nA    0)    nch_mac w=1.0u l=0.5u
+M6  (out   vbnc  nB    0)    nch_mac w=1.0u l=0.5u
+M7  (nA2   vbpc  nA3   vdd)  pch_mac w=2.0u l=0.5u
+M8  (out   vbpc  nB3   vdd)  pch_mac w=2.0u l=0.5u
+M9  (nA3   nA2   vdd   vdd)  pch_mac w=2.0u l=0.5u
+M10 (nB3   nA2   vdd   vdd)  pch_mac w=2.0u l=0.5u
+CL  (out 0) capacitor c=0.05p
+
+save out
+opInfo info what=oppoint where=rawfile
+ac ac start=1 stop=1G dec=40
