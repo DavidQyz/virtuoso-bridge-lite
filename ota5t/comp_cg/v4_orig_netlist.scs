@@ -1,0 +1,56 @@
+
+// Library name: test_rect
+// Cell name: DBB1
+// View name: schematic
+subckt DBB1 IN1 IN2 OUT
+    M1 (IN2 IN1 OUT OUT) pch_5_mac l=500n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+    M0 (OUT IN2 IN1 OUT) pch_5_mac l=500n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+ends DBB1
+// End of subcircuit definition.
+
+// Library name: test_rect
+// Cell name: comparator_newV4_for_use_nb
+// View name: schematic
+M21 (OUT MID_INV VDD VDD) pch_mac l=180.0n w=880.0n multi=1 nf=1 sigma=1 \
+        sd=540.0n ad=4.224e-13 as=4.224e-13 pd=2.72u ps=2.72u nrd=0.306818 \
+        nrs=0.306818 sa=480.0n sb=480.0n sca=0 scb=0 scc=0 mismatchflag=1
+M6 (MID_INV COMP_OUT VDD VDD) pch_5_mac l=500n w=220.0n multi=1 nf=1 \
+        sigma=1 sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u \
+        nrd=1.40909 nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 \
+        mismatchflag=1
+M1 (net78 net78 INN V_BB) pch_5_mac l=500n w=2u multi=1 nf=4 sigma=1 \
+        sd=540.0n ad=5.4e-13 as=7.5e-13 pd=4.16u ps=6u nrd=0.135 nrs=0.135 \
+        sa=480.0n sb=480.0n sca=0 scb=0 scc=0 mismatchflag=1
+M0 (COMP_OUT net78 INP V_BB) pch_5_mac l=500n w=2u multi=1 nf=4 sigma=1 \
+        sd=540.0n ad=5.4e-13 as=7.5e-13 pd=4.16u ps=6u nrd=0.135 nrs=0.135 \
+        sa=480.0n sb=480.0n sca=0 scb=0 scc=0 mismatchflag=1
+M11 (V_BB V_BB INP V_BB) pch_5_mac l=500n w=500n multi=2 nf=1 sigma=1 \
+        sd=540.0n ad=2.4e-13 as=2.4e-13 pd=1.96u ps=1.96u nrd=0.54 \
+        nrs=0.54 sa=480.0n sb=480.0n sca=0 scb=0 scc=0 mismatchflag=1
+M10 (V_BB V_BB INN V_BB) pch_5_mac l=500n w=500n multi=2 nf=1 sigma=1 \
+        sd=540.0n ad=2.4e-13 as=2.4e-13 pd=1.96u ps=1.96u nrd=0.54 \
+        nrs=0.54 sa=480.0n sb=480.0n sca=0 scb=0 scc=0 mismatchflag=1
+M22 (COMP_VCM EN V_BN VSS) nch_mac l=180.0n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+M9 (V_BN N_EN VSS VSS) nch_mac l=180.0n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+M20 (OUT MID_INV VSS VSS) nch_mac l=180.0n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+M5 (MID_INV COMP_OUT VSS VSS) nch_5_mac l=600n w=440.0n multi=2 nf=2 \
+        sigma=1 sd=620.0n ad=2.204e-13 as=3.968e-13 pd=2.08u ps=3.76u \
+        nrd=0.704546 nrs=0.704546 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 \
+        mismatchflag=1
+M2 (COMP_OUT V_BN VSS VSS) nch_5_mac l=600n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+M3 (net78 V_BN VSS VSS) nch_5_mac l=600n w=220.0n multi=1 nf=1 sigma=1 \
+        sd=620.0n ad=1.984e-13 as=1.984e-13 pd=1.88u ps=1.88u nrd=1.40909 \
+        nrs=1.40909 sa=520.0n sb=520.0n sca=0 scb=0 scc=0 mismatchflag=1
+I3 (INP INN V_BB) DBB1

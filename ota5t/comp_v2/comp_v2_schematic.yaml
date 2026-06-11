@@ -1,0 +1,105 @@
+# =============================================================================
+# AUTHORITATIVE source for the COMP_V2 comparator schematic figure.
+# Mirrors the LIVE Cadence netlist of test/COMP_V2 (dummies M10/M11 omitted).
+# Edit here -> tools/render_schematic.py -> svg/png.
+# =============================================================================
+meta:
+  title: "COMP_V2 — dual-threshold comparator (test/COMP_V2)"
+  one_liner: "CG input pair + dual-threshold parallel sense: 5V path (M5, late OD) || 2V path (MCL clamp + M5B, 0.45V) -> MID -> INV2 -> OUT."
+  visible_internal_structure:
+    - "12 real MOS + DBB1 bias block (I3); dummies M10/M11 omitted"
+    - "new vs V4: MCL pass-clamp (G=VDD) makes YC=min(COMP_OUT,~1V); M5B nmos2v early-fire"
+  omitted_details:
+    - "dummy devices M10/M11 (pmos5v tied to V_BB)"
+    - "W/L sizes; most bulk pins"
+  conventions:
+    pmos: "red; source=top terminal"
+    nmos: "blue; source=bottom terminal"
+    device_voltage: "M0,M1,M2,M3,MCL,M5,M6 are 5V devices; M5B,M20,M21,M9,M22 are 2V"
+    inputs: "INP/INN enter the SOURCES of M0/M1 (common-gate); gates shared at net78"
+  exports: {svg: ota5t/comp_v2/comp_v2_schematic.svg, png: ota5t/comp_v2/comp_v2_schematic.png}
+
+canvas: {xlim: [0, 14.8], ylim: [0, 11], figsize: [15.2, 11], title_y: 10.8}
+
+rails:
+  - {net: VDD, y: 10.2, x0: 0.5, x1: 14.0}
+  - {net: VSS, y: 0.8,  x0: 0.5, x1: 14.0}
+
+# pmos: top=source bot=drain ; nmos: top=drain bot=source.
+devices:
+  - {name: M1,  kind: pmos, x: 4.0,  y: 7.6, gate: right, label: left,  role: "CG diode ref (S=INN, G=D=net78)"}
+  - {name: M0,  kind: pmos, x: 5.6,  y: 7.6, gate: left,  label: right, role: "CG active (S=INP, D=COMP_OUT)"}
+  - {name: M3,  kind: nmos, x: 4.0,  y: 5.2, gate: left,  label: right, role: "load (D=net78, G=V_BN)"}
+  - {name: M2,  kind: nmos, x: 5.6,  y: 5.2, gate: right, label: right, role: "load (D=COMP_OUT, G=V_BN)"}
+  - {name: M22, kind: nmos, x: 7.7,  y: 4.4, gate: right, label: left,  role: "EN sw (D=COMP_VCM, G=EN, S=V_BN)"}
+  - {name: M9,  kind: nmos, x: 7.7,  y: 2.4, gate: right, label: left,  role: "disable sw (D=V_BN, G=N_EN)"}
+  - {name: MCL, kind: nmos, x: 9.8,  y: 5.6, gate: left,  label: right, role: "pass-clamp (D=COMP_OUT, G=VDD, S=YC)"}
+  - {name: M6,  kind: pmos, x: 11.4, y: 7.6, gate: left,  label: right, role: "MID reset P (G=COMP_OUT)"}
+  - {name: M5,  kind: nmos, x: 11.4, y: 5.2, gate: left,  label: right, role: "path A: 5V sense (G=COMP_OUT)"}
+  - {name: M5B, kind: nmos, x: 10.5, y: 4.0, gate: left,  label: right, role: "path B: 2V early sense (G=YC)"}
+  - {name: M21, kind: pmos, x: 13.0, y: 7.6, gate: left, label: right, role: "INV2 P (G=MID, D=OUT)"}
+  - {name: M20, kind: nmos, x: 13.0, y: 5.2, gate: left, label: right, role: "INV2 N (G=MID, D=OUT)"}
+
+blocks:
+  - name: I3
+    x: 0.7
+    y: 4.6
+    w: 1.7
+    h: 2.0
+    title: "DBB1 (I3)\nn-well bias"
+    pins:
+      - {name: IN1, side: left,  frac: 0.72}
+      - {name: IN2, side: left,  frac: 0.28}
+      - {name: OUT, side: right, frac: 0.5}
+
+rail_connections:
+  VDD: [M6.top, M21.top]
+  VSS: [M2.bot, M3.bot, M5.bot, M5B.bot, M20.bot, M9.bot]
+
+wires:
+  # --- net78: M1 diode + M0 gate ---
+  - {net: net78, path: [M1.bot, M3.top]}
+  - {net: net78, path: [M1.gate, [4.55, 6.6], [4.0, 6.6]]}
+  - {net: net78, path: [M0.gate, [5.05, 6.6], [4.0, 6.6]]}
+  # --- COMP_OUT: M0.D = M2.D -> MCL.D + M5.gate + M6.gate ---
+  - {net: COMP_OUT, path: [M0.bot, M2.top]}
+  - {net: COMP_OUT, path: [[5.6, 6.5], [10.85, 6.5], [10.85, 7.6], M6.gate]}
+  - {net: COMP_OUT, path: [[10.85, 6.5], [10.85, 5.2], M5.gate]}
+  - {net: COMP_OUT, path: [[9.8, 6.5], MCL.top]}
+  # --- MCL gate to VDD rail ---
+  - {net: VDD, path: [MCL.gate, [9.25, 10.2]]}
+  # --- YC: MCL.S -> M5B.gate ---
+  - {net: YC, path: [MCL.bot, [9.8, 4.0], [9.95, 4.0], M5B.gate]}
+  # --- MID: M6.D = M5.D = M5B.D -> INV2 gates ---
+  - {net: MID, path: [M6.bot, M5.top]}
+  - {net: MID, path: [M5B.top, [10.5, 6.1], [11.4, 6.1]]}
+  - {net: MID, path: [[11.4, 6.5], [12.45, 6.5], [12.45, 7.6], M21.gate]}
+  - {net: MID, path: [[12.45, 6.5], [12.45, 5.2], M20.gate]}
+  # --- OUT ---
+  - {net: OUT, path: [M21.bot, M20.top]}
+  - {net: OUT, path: [[13.0, 6.5], [13.9, 6.5]]}
+  # --- V_BN: M22.S = M9.D -> M2.G & M3.G ---
+  - {net: V_BN, path: [M22.bot, M9.top]}
+  - {net: V_BN, path: [[7.7, 3.4], [6.6, 3.4], [6.6, 5.2], M2.gate]}
+  - {net: V_BN, path: [[6.6, 3.4], [3.45, 3.4], [3.45, 5.2], M3.gate]}
+  # --- inputs to CG sources (+ DBB1) ---
+  - {net: INP, path: [I3.IN1, [0.15, 8.6], [5.6, 8.6], M0.top]}
+  - {net: INN, path: [I3.IN2, [0.05, 8.9], [4.0, 8.9], M1.top]}
+
+dots: [[4.0, 6.6], [5.6, 6.5], [9.8, 6.5], [10.85, 6.5], [11.4, 6.1], [11.4, 6.5], [12.45, 6.5], [13.0, 6.5], [7.7, 3.4], [6.6, 3.4], [9.25, 10.2]]
+
+bias_pins: []
+
+ports:
+  - {at: I3.OUT, name: "V_BB", kind: bias}
+  - {at: M22.top, name: "COMP_VCM", kind: bias}
+  - {at: M22.gate, name: "EN", kind: in}
+  - {at: M9.gate, name: "N_EN", kind: in}
+  - {xy: [0.05, 8.9], name: "INN", kind: in}
+  - {xy: [0.15, 8.6], name: "INP", kind: in}
+  - {xy: [13.9, 6.5], name: "OUT", kind: out}
+
+notes:
+  - "Dual-threshold sense on MID: M5 (5V, 0.75V th, OD grows with COMP_OUT) || M5B (2V, 0.45V th via YC clamp). Whichever fires first pulls MID low; currents add."
+  - "MCL G=VDD: YC = min(COMP_OUT, VDD-Vth5(body) ~ 0.97V) -- protects all 2V gates while COMP_OUT swings to ~INP (5V)."
+  - "V_BN = COMP_VCM via M22(EN); M9(N_EN) disables. DBB1 + M10/M11 give V_BB ~ max(INP,INN) n-well bias."

@@ -1,0 +1,46 @@
+HEADER
+"PSFversion" "1.00"
+"Log Generator" "drlLog rev. 1.0"
+"Log Time Stamp" "Thu Jun 11 17:37:02 2026"
+"simulator" "spectre"
+"version" "18.1.0.077"
+"date" "5:37:02 PM, Thur Jun 11, 2026"
+"design" "// folded-cascode PMOS-input OTA - tsmc18, ideal bias, stim=vdd"
+"signalNameType" "spectre"
+"simMode" "Spectre"
+"measdgt" 0
+"ingold" 2
+"sst2usecolon" 0
+TYPE
+"analysisInst" STRUCT(
+"analysisType" STRING *
+"dataFile" STRING *
+"format" STRING *
+"parent" STRING *
+"sweepVariable" ARRAY ( * ) STRING *
+"description" STRING *
+)
+VALUE
+"opInfo-info" "analysisInst" (
+"info"
+"opInfo.info"
+"PSF"
+""
+()
+"Circuit Information"
+) PROP(
+"data_type" "struct"
+)
+
+"ac-ac" "analysisInst" (
+"ac"
+"ac.ac"
+"PSF"
+""
+("freq")
+"AC Analysis `ac': freq = (1 Hz -> 1 GHz)"
+) PROP(
+"data_type" "swept_scalar"
+)
+
+END

@@ -1,0 +1,98 @@
+# =============================================================================
+# AUTHORITATIVE source for the common-gate comparator schematic figure.
+# Built from the LIVE Cadence netlist of test_rect/comparator_newV4_for_use_nb
+# (dummies M10/M11 omitted). Edit here -> tools/render_schematic.py -> svg/png.
+# =============================================================================
+meta:
+  title: "Common-gate comparator (comparator_newV4_for_use_nb)"
+  one_liner: "PMOS common-gate input pair (M1 diode ref) + NMOS current-source loads -> COMP_OUT -> INV1(5V) -> INV2(2V) -> OUT."
+  visible_internal_structure:
+    - "10 real MOS (M0,M1,M2,M3,M5,M6,M9,M20,M21,M22) + DBB1 bias block (I3)"
+    - "rails VDD/VSS, signal wires + junction dots, I/O + bias ports"
+  omitted_details:
+    - "dummy devices M10/M11 (pmos5v tied to V_BB)"
+    - "W/L sizes; most bulk pins (shown only for V_BB n-well bias of M0/M1)"
+  conventions:
+    pmos: "red; source=top terminal"
+    nmos: "blue; source=bottom terminal"
+    device_voltage: "M0,M1,M2,M3 (CG core) + M5,M6 (INV1) are 5V devices; M20,M21 (INV2) + M9,M22 (enable) are 2V"
+    inputs: "INP/INN enter the SOURCES of M0/M1 (common-gate). Gates shared at net78 (M1 is diode-connected)."
+  exports: {svg: ota5t/comp_cg/comp_schematic.svg, png: ota5t/comp_cg/comp_schematic.png}
+
+canvas: {xlim: [0, 12.6], ylim: [0, 11], figsize: [13, 11], title_y: 10.8}
+
+rails:
+  - {net: VDD, y: 10.2, x0: 0.5, x1: 11.8}
+  - {net: VSS, y: 0.8,  x0: 0.5, x1: 11.8}
+
+# pmos: top=source bot=drain ; nmos: top=drain bot=source.
+devices:
+  - {name: M1,  kind: pmos, x: 4.0,  y: 7.6, gate: right, label: left,  role: "CG diode ref (S=INN, G=D=net78)"}
+  - {name: M0,  kind: pmos, x: 5.6,  y: 7.6, gate: left,  label: right, role: "CG active (S=INP, G=net78, D=COMP_OUT)"}
+  - {name: M3,  kind: nmos, x: 4.0,  y: 5.2, gate: left,  label: right, role: "load (D=net78, G=V_BN)"}
+  - {name: M2,  kind: nmos, x: 5.6,  y: 5.2, gate: right, label: right, role: "load (D=COMP_OUT, G=V_BN)"}
+  - {name: M22, kind: nmos, x: 7.7,  y: 4.4, gate: right, label: left,  role: "EN sw (D=COMP_VCM, G=EN, S=V_BN)"}
+  - {name: M9,  kind: nmos, x: 7.7,  y: 2.4, gate: right, label: left,  role: "disable sw (D=V_BN, G=N_EN, S=VSS)"}
+  - {name: M6,  kind: pmos, x: 9.3,  y: 7.6, gate: left,  label: right, role: "INV1 P (G=COMP_OUT, D=MID_INV)"}
+  - {name: M5,  kind: nmos, x: 9.3,  y: 5.4, gate: left,  label: right, role: "INV1 N (G=COMP_OUT, D=MID_INV)"}
+  - {name: M21, kind: pmos, x: 10.9, y: 7.6, gate: left, label: right, role: "INV2 P (G=MID_INV, D=OUT)"}
+  - {name: M20, kind: nmos, x: 10.9, y: 5.4, gate: left, label: right, role: "INV2 N (G=MID_INV, D=OUT)"}
+
+blocks:
+  - name: I3
+    x: 0.7
+    y: 4.6
+    w: 1.7
+    h: 2.0
+    title: "DBB1 (I3)\nn-well bias"
+    pins:
+      - {name: IN1, side: left,  frac: 0.72}   # INP
+      - {name: IN2, side: left,  frac: 0.28}   # INN
+      - {name: OUT, side: right, frac: 0.5}    # V_BB
+
+rail_connections:
+  VDD: [M6.top, M21.top]
+  VSS: [M2.bot, M3.bot, M5.bot, M20.bot, M9.bot]
+
+wires:
+  # --- net78 : M1.D(bot) = M3.D(top) ; M1.G & M0.G tie here (M1 diode) ---
+  - {net: net78, path: [M1.bot, M3.top]}
+  - {net: net78, path: [M1.gate, [4.55, 6.6], [4.0, 6.6]]}        # M1 diode: gate->drain(net78)
+  - {net: net78, path: [M0.gate, [5.05, 6.6], [4.0, 6.6]]}        # M0 gate -> net78
+  # --- COMP_OUT : M0.D(bot) = M2.D(top) -> INV1 gates ---
+  - {net: COMP_OUT, path: [M0.bot, M2.top]}
+  - {net: COMP_OUT, path: [[5.6, 6.5], [8.1, 6.5], [8.1, 7.6], M6.gate]}
+  - {net: COMP_OUT, path: [[8.1, 6.5], [8.1, 5.4], M5.gate]}
+  # --- MID_INV : M5.D(top)=M6.D(bot) -> INV2 gates ---
+  - {net: MID_INV, path: [M6.bot, M5.top]}
+  - {net: MID_INV, path: [[9.3, 6.5], [9.9, 6.5], [9.9, 7.6], M21.gate]}
+  - {net: MID_INV, path: [[9.9, 6.5], [9.9, 5.4], M20.gate]}
+  # --- OUT : M21.D(bot)=M20.D(top) ---
+  - {net: OUT, path: [M21.bot, M20.top]}
+  - {net: OUT, path: [[10.9, 6.5], [11.7, 6.5]]}
+  # --- V_BN : M22.S(bot)=M9.D(top) ; -> M2.G & M3.G ---
+  - {net: V_BN, path: [M22.bot, M9.top]}
+  - {net: V_BN, path: [[7.7, 3.4], [6.6, 3.4], [6.6, 5.2], M2.gate]}
+  - {net: V_BN, path: [[6.6, 3.4], [3.45, 3.4], [3.45, 5.2], M3.gate]}
+  # --- inputs to CG sources (+ DBB1) ---
+  - {net: INP, path: [I3.IN1, [0.15, 8.6], [5.6, 8.6], M0.top]}
+  - {net: INN, path: [I3.IN2, [0.05, 8.9], [4.0, 8.9], M1.top]}
+  # --- V_BB from DBB1 (n-well bias of M0/M1; bulk wires omitted) ---
+
+dots: [[4.0, 6.6], [5.6, 6.5], [8.1, 6.5], [9.3, 6.5], [9.9, 6.5], [10.9, 6.5], [7.7, 3.4], [6.6, 3.4]]
+
+bias_pins: []
+
+ports:
+  - {at: I3.OUT, name: "V_BB", kind: bias}
+  - {at: M22.top, name: "COMP_VCM", kind: bias}
+  - {at: M22.gate, name: "EN", kind: in}
+  - {at: M9.gate, name: "N_EN", kind: in}
+  - {xy: [0.05, 8.9], name: "INN", kind: in}
+  - {xy: [0.15, 8.6], name: "INP", kind: in}
+  - {xy: [11.7, 6.5], name: "OUT", kind: out}
+
+notes:
+  - "Common-gate: INP->M0.source, INN->M1.source; gates shared at net78; M1 diode-connected sets net78."
+  - "M2/M3 = NMOS current-source loads (gate=V_BN). V_BN = COMP_VCM via M22(EN); M9(N_EN) disables."
+  - "DBB1 (I3) makes V_BB = n-well bias for M0/M1 (tracks input CM for 0-5V range)."

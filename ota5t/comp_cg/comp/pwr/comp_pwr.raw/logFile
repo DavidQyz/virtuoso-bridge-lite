@@ -1,0 +1,672 @@
+HEADER
+"PSFversion" "1.00"
+"Log Generator" "drlLog rev. 1.0"
+"Log Time Stamp" "Thu Jun 11 17:22:01 2026"
+"simulator" "spectre"
+"version" "18.1.0.077"
+"date" "5:22:01 PM, Thur Jun 11, 2026"
+"design" "// COMP_CG tprop testbench - tsmc18, half-wave 13.56MHz on INP"
+"signalNameType" "spectre"
+"simMode" "Spectre"
+"measdgt" 0
+"ingold" 2
+"sst2usecolon" 0
+TYPE
+"analysisInst" STRUCT(
+"analysisType" STRING *
+"dataFile" STRING *
+"format" STRING *
+"parent" STRING *
+"sweepVariable" ARRAY ( * ) STRING *
+"description" STRING *
+)
+VALUE
+"sw1_tr-sweep" "analysisInst" (
+"sweep"
+"sw1_tr.sweep"
+"PSF"
+""
+("vref")
+"Sweep parent"
+) PROP(
+"sweep_tree_type" "sweepNode"
+)
+
+"sw1-000_tr-tran" "analysisInst" (
+"tran"
+"sw1-000_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-000_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.100000
+)
+
+"sw1-001_tr-tran" "analysisInst" (
+"tran"
+"sw1-001_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-001_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.200000
+)
+
+"sw1-002_tr-tran" "analysisInst" (
+"tran"
+"sw1-002_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-002_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.300000
+)
+
+"sw1-003_tr-tran" "analysisInst" (
+"tran"
+"sw1-003_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-003_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.400000
+)
+
+"sw1-004_tr-tran" "analysisInst" (
+"tran"
+"sw1-004_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-004_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.500000
+)
+
+"sw1-005_tr-tran" "analysisInst" (
+"tran"
+"sw1-005_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-005_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.600000
+)
+
+"sw1-006_tr-tran" "analysisInst" (
+"tran"
+"sw1-006_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-006_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.700000
+)
+
+"sw1-007_tr-tran" "analysisInst" (
+"tran"
+"sw1-007_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-007_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.800000
+)
+
+"sw1-008_tr-tran" "analysisInst" (
+"tran"
+"sw1-008_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-008_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 0.900000
+)
+
+"sw1-009_tr-tran" "analysisInst" (
+"tran"
+"sw1-009_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-009_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.00000
+)
+
+"sw1-010_tr-tran" "analysisInst" (
+"tran"
+"sw1-010_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-010_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.10000
+)
+
+"sw1-011_tr-tran" "analysisInst" (
+"tran"
+"sw1-011_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-011_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.20000
+)
+
+"sw1-012_tr-tran" "analysisInst" (
+"tran"
+"sw1-012_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-012_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.30000
+)
+
+"sw1-013_tr-tran" "analysisInst" (
+"tran"
+"sw1-013_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-013_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.40000
+)
+
+"sw1-014_tr-tran" "analysisInst" (
+"tran"
+"sw1-014_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-014_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.50000
+)
+
+"sw1-015_tr-tran" "analysisInst" (
+"tran"
+"sw1-015_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-015_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.60000
+)
+
+"sw1-016_tr-tran" "analysisInst" (
+"tran"
+"sw1-016_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-016_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.70000
+)
+
+"sw1-017_tr-tran" "analysisInst" (
+"tran"
+"sw1-017_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-017_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.80000
+)
+
+"sw1-018_tr-tran" "analysisInst" (
+"tran"
+"sw1-018_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-018_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 1.90000
+)
+
+"sw1-019_tr-tran" "analysisInst" (
+"tran"
+"sw1-019_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-019_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.00000
+)
+
+"sw1-020_tr-tran" "analysisInst" (
+"tran"
+"sw1-020_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-020_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.10000
+)
+
+"sw1-021_tr-tran" "analysisInst" (
+"tran"
+"sw1-021_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-021_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.20000
+)
+
+"sw1-022_tr-tran" "analysisInst" (
+"tran"
+"sw1-022_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-022_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.30000
+)
+
+"sw1-023_tr-tran" "analysisInst" (
+"tran"
+"sw1-023_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-023_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.40000
+)
+
+"sw1-024_tr-tran" "analysisInst" (
+"tran"
+"sw1-024_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-024_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.50000
+)
+
+"sw1-025_tr-tran" "analysisInst" (
+"tran"
+"sw1-025_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-025_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.60000
+)
+
+"sw1-026_tr-tran" "analysisInst" (
+"tran"
+"sw1-026_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-026_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.70000
+)
+
+"sw1-027_tr-tran" "analysisInst" (
+"tran"
+"sw1-027_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-027_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.80000
+)
+
+"sw1-028_tr-tran" "analysisInst" (
+"tran"
+"sw1-028_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-028_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 2.90000
+)
+
+"sw1-029_tr-tran" "analysisInst" (
+"tran"
+"sw1-029_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-029_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.00000
+)
+
+"sw1-030_tr-tran" "analysisInst" (
+"tran"
+"sw1-030_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-030_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.10000
+)
+
+"sw1-031_tr-tran" "analysisInst" (
+"tran"
+"sw1-031_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-031_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.20000
+)
+
+"sw1-032_tr-tran" "analysisInst" (
+"tran"
+"sw1-032_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-032_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.30000
+)
+
+"sw1-033_tr-tran" "analysisInst" (
+"tran"
+"sw1-033_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-033_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.40000
+)
+
+"sw1-034_tr-tran" "analysisInst" (
+"tran"
+"sw1-034_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-034_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.50000
+)
+
+"sw1-035_tr-tran" "analysisInst" (
+"tran"
+"sw1-035_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-035_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.60000
+)
+
+"sw1-036_tr-tran" "analysisInst" (
+"tran"
+"sw1-036_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-036_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.70000
+)
+
+"sw1-037_tr-tran" "analysisInst" (
+"tran"
+"sw1-037_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-037_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.80000
+)
+
+"sw1-038_tr-tran" "analysisInst" (
+"tran"
+"sw1-038_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-038_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 3.90000
+)
+
+"sw1-039_tr-tran" "analysisInst" (
+"tran"
+"sw1-039_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-039_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.00000
+)
+
+"sw1-040_tr-tran" "analysisInst" (
+"tran"
+"sw1-040_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-040_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.10000
+)
+
+"sw1-041_tr-tran" "analysisInst" (
+"tran"
+"sw1-041_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-041_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.20000
+)
+
+"sw1-042_tr-tran" "analysisInst" (
+"tran"
+"sw1-042_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-042_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.30000
+)
+
+"sw1-043_tr-tran" "analysisInst" (
+"tran"
+"sw1-043_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-043_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.40000
+)
+
+"sw1-044_tr-tran" "analysisInst" (
+"tran"
+"sw1-044_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-044_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.50000
+)
+
+"sw1-045_tr-tran" "analysisInst" (
+"tran"
+"sw1-045_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-045_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.60000
+)
+
+"sw1-046_tr-tran" "analysisInst" (
+"tran"
+"sw1-046_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-046_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.70000
+)
+
+"sw1-047_tr-tran" "analysisInst" (
+"tran"
+"sw1-047_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-047_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.80000
+)
+
+"sw1-048_tr-tran" "analysisInst" (
+"tran"
+"sw1-048_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-048_tr': time = (0 s -> 162.493 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"vref" 4.90000
+)
+
+END

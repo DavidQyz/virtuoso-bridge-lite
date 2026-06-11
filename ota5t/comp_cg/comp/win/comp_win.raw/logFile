@@ -1,0 +1,100 @@
+HEADER
+"PSFversion" "1.00"
+"Log Generator" "drlLog rev. 1.0"
+"Log Time Stamp" "Thu Jun 11 17:16:00 2026"
+"simulator" "spectre"
+"version" "18.1.0.077"
+"date" "5:16:00 PM, Thur Jun 11, 2026"
+"design" "// COMP_CG tprop testbench - tsmc18, half-wave 13.56MHz on INP"
+"signalNameType" "spectre"
+"simMode" "Spectre"
+"measdgt" 0
+"ingold" 2
+"sst2usecolon" 0
+TYPE
+"analysisInst" STRUCT(
+"analysisType" STRING *
+"dataFile" STRING *
+"format" STRING *
+"parent" STRING *
+"sweepVariable" ARRAY ( * ) STRING *
+"description" STRING *
+)
+VALUE
+"sw1_tr-sweep" "analysisInst" (
+"sweep"
+"sw1_tr.sweep"
+"PSF"
+""
+("win")
+"Sweep parent"
+) PROP(
+"sweep_tree_type" "sweepNode"
+)
+
+"sw1-000_tr-tran" "analysisInst" (
+"tran"
+"sw1-000_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-000_tr': time = (0 s -> 130.619 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"win" 1.00000e-06
+)
+
+"sw1-001_tr-tran" "analysisInst" (
+"tran"
+"sw1-001_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-001_tr': time = (0 s -> 130.619 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"win" 1.50000e-06
+)
+
+"sw1-002_tr-tran" "analysisInst" (
+"tran"
+"sw1-002_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-002_tr': time = (0 s -> 130.619 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"win" 2.00000e-06
+)
+
+"sw1-003_tr-tran" "analysisInst" (
+"tran"
+"sw1-003_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-003_tr': time = (0 s -> 130.619 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"win" 3.00000e-06
+)
+
+"sw1-004_tr-tran" "analysisInst" (
+"tran"
+"sw1-004_tr.tran.tran"
+"PSF"
+"sw1_tr-sweep"
+("time")
+"Transient Analysis `sw1-004_tr': time = (0 s -> 130.619 ns)"
+) PROP(
+"data_type" "swept_scalar"
+"sweep_tree_type" "leafNode"
+"win" 4.00000e-06
+)
+
+END

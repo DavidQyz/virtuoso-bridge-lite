@@ -1,0 +1,133 @@
+HEADER
+"PSFversion" "1.00"
+"simulator" "spectre"
+"version" "18.1.0.077"
+"date" "6:19:02 PM, Thur Jun 11, 2026"
+"design" "// COMP_V2 tprop testbench - low-swing 2V decision path"
+"analysis type" "sweep"
+"analysis name" "sw1_tr"
+"analysis description" "Sweep parent"
+"xVecSorted" "unknown"
+"tolerance.relative" 0.00100000
+TYPE
+"sweep" FLOAT DOUBLE PROP(
+"key" "sweep"
+)
+"V" FLOAT DOUBLE PROP(
+"units" "V"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"I" FLOAT DOUBLE PROP(
+"units" "A"
+"key" "branch"
+"tolerance" 1.00000e-12
+)
+"MMF" FLOAT DOUBLE PROP(
+"units" "A*turn"
+"key" "node"
+"tolerance" 1.00000e-12
+)
+"Wb" FLOAT DOUBLE PROP(
+"units" "Wb"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"Temp" FLOAT DOUBLE PROP(
+"units" "C"
+"key" "node"
+"tolerance" 0.000100000
+)
+"Pwr" FLOAT DOUBLE PROP(
+"units" "W"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"U" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"V/Sec" FLOAT DOUBLE PROP(
+"units" "V/s"
+"key" "node"
+"tolerance" 0.000100000
+)
+"I/Sec" FLOAT DOUBLE PROP(
+"units" "A/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"1/Sec" FLOAT DOUBLE PROP(
+"units" "1/s"
+"key" "node"
+"tolerance" 0.000100000
+)
+"HOD" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 0.0100000
+)
+"Q" FLOAT DOUBLE PROP(
+"units" "Coul"
+"key" "node"
+"tolerance" 1.00000e-15
+)
+SWEEP
+"vref" "sweep" PROP(
+"sweep_direction" 0
+"units" ""
+"plot" 0
+"grid" 1
+)
+VALUE
+"vref" 1.000000000000000e-01
+"vref" 2.000000000000000e-01
+"vref" 3.000000000000000e-01
+"vref" 4.000000000000000e-01
+"vref" 5.000000000000000e-01
+"vref" 6.000000000000000e-01
+"vref" 7.000000000000000e-01
+"vref" 8.000000000000000e-01
+"vref" 9.000000000000000e-01
+"vref" 1.000000000000000e+00
+"vref" 1.100000000000000e+00
+"vref" 1.200000000000000e+00
+"vref" 1.300000000000000e+00
+"vref" 1.400000000000000e+00
+"vref" 1.500000000000000e+00
+"vref" 1.600000000000000e+00
+"vref" 1.700000000000000e+00
+"vref" 1.800000000000000e+00
+"vref" 1.900000000000000e+00
+"vref" 2.000000000000000e+00
+"vref" 2.100000000000000e+00
+"vref" 2.200000000000000e+00
+"vref" 2.300000000000000e+00
+"vref" 2.400000000000000e+00
+"vref" 2.500000000000000e+00
+"vref" 2.600000000000000e+00
+"vref" 2.700000000000000e+00
+"vref" 2.800000000000000e+00
+"vref" 2.900000000000000e+00
+"vref" 3.000000000000000e+00
+"vref" 3.100000000000000e+00
+"vref" 3.200000000000000e+00
+"vref" 3.300000000000000e+00
+"vref" 3.400000000000000e+00
+"vref" 3.500000000000000e+00
+"vref" 3.600000000000000e+00
+"vref" 3.700000000000000e+00
+"vref" 3.800000000000000e+00
+"vref" 3.900000000000000e+00
+"vref" 4.000000000000000e+00
+"vref" 4.100000000000000e+00
+"vref" 4.200000000000000e+00
+"vref" 4.300000000000000e+00
+"vref" 4.400000000000000e+00
+"vref" 4.500000000000000e+00
+"vref" 4.600000000000000e+00
+"vref" 4.700000000000000e+00
+"vref" 4.800000000000000e+00
+"vref" 4.900000000000000e+00
+END
