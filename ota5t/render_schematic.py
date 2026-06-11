@@ -15,7 +15,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from matplotlib.patches import Polygon, Circle
+from matplotlib.patches import Polygon, Circle, Rectangle
 
 RED, BLUE, WIRE, RAIL = "#c0392b", "#2c6fbf", "#222", "#444"
 HERE = Path(__file__).resolve().parent
@@ -58,6 +58,33 @@ def main():
                 va="center", zorder=7)
         term[d["name"]] = {"top": (cx, cy + 0.55), "bot": (cx, cy - 0.55),
                            "gate": (gt, cy)}
+
+    # ---- blocks (sub-cells drawn as labelled boxes; pins resolvable as Name.Pin) ----
+    for b in S.get("blocks", []):
+        bx, by, bw, bh = b["x"], b["y"], b["w"], b["h"]
+        ax.add_patch(Rectangle((bx, by), bw, bh, facecolor="#eef0f7",
+                               edgecolor="#444", lw=1.6, zorder=2))
+        ax.text(bx + bw/2, by + bh/2, b.get("title", b["name"]), fontsize=9,
+                ha="center", va="center", zorder=3, color="#333", fontweight="bold")
+        td = {}
+        for p in b.get("pins", []):
+            side, frac, ext = p["side"], p.get("frac", 0.5), 0.45
+            if side == "left":
+                ax_, ay = bx, by + bh*frac; ex, ey = ax_-ext, ay
+            elif side == "right":
+                ax_, ay = bx+bw, by + bh*frac; ex, ey = ax_+ext, ay
+            elif side == "top":
+                ax_, ay = bx + bw*frac, by+bh; ex, ey = ax_, ay+ext
+            else:
+                ax_, ay = bx + bw*frac, by; ex, ey = ax_, ay-ext
+            line(ax_, ay, ex, ey, WIRE, 1.2)
+            td[p["name"]] = (ex, ey)
+            lx = ax_ + (0.06 if side == "right" else -0.06 if side == "left" else 0)
+            ax.text(lx, ay + (0.08 if side in ("top", "bottom") else 0.07), p["name"],
+                    fontsize=6.5, color="#666",
+                    ha="left" if side == "right" else "right" if side == "left" else "center",
+                    va="bottom")
+        term[b["name"]] = td
 
     def resolve(pt):
         if isinstance(pt, str):

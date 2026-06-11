@@ -7,6 +7,7 @@
 meta:
   title: Folded-cascode PMOS-input OTA
   one_liner: PMOS input pair folded into NMOS cascode, self-biased PMOS cascode mirror load.
+  layout: "input stage (M0 tail + M1/M2 pair) on the FAR LEFT; the two cascode/load branches kept as two columns on the right (col-1 = M9/M7/M5/M3, col-2 = M10/M8/M6/M4)."
   visible_internal_structure:
     - 11 MOSFET symbols, labelled M0..M10
     - VDD / VSS power rails
@@ -20,57 +21,60 @@ meta:
     pmos: "red symbol; SOURCE = top terminal (to VDD or tail)"
     nmos: "blue symbol; SOURCE = bottom terminal (to VSS)"
     gate: "side terminal; left/right per device"
-    mirror_gate_bus: "nA2 node routes over the top to M9 & M10 gates; where it crosses VDD stubs there is NO dot = no connect"
+    mirror_gate_bus: "nA2 routes UP BETWEEN the two columns to M9 & M10 gates (open lane)"
+    m2_drain_route: "M2 drain wraps under the bottom and up to col-2 fold node nB; its one crossing of col-1 VSS stub is a NO-connect (no dot)"
     label_rule: "only device names Mx are drawn; no sizes; internal nets unlabelled"
   exports:
     svg: ota5t/fc_schematic.svg
     png: ota5t/fc_schematic.png
   figma:
-    sync_status: "not synced (no Figma MCP in this environment); local SVG is authoritative; import SVG into Figma"
+    sync_status: "not synced (no Figma MCP here); local SVG is authoritative; import SVG into Figma"
 
-canvas: {xlim: [0, 12], ylim: [0, 11], figsize: [12.2, 11], title_y: 10.85}
+canvas: {xlim: [0, 11.2], ylim: [0, 11], figsize: [12, 11], title_y: 10.85}
 
 rails:
-  - {net: VDD, y: 10.3, x0: 1.0, x1: 11.0}
-  - {net: VSS, y: 0.8,  x0: 1.0, x1: 11.0}
+  - {net: VDD, y: 10.3, x0: 0.8, x1: 10.2}
+  - {net: VSS, y: 0.8,  x0: 0.8, x1: 10.2}
 
-# kind: pmos|nmos ; gate: left|right (which side the gate lead exits) ;
-# label: right|left (which side the Mx name sits). terminals are derived:
-#   pmos -> top=source bot=drain ; nmos -> top=drain bot=source.
+# kind: pmos|nmos ; gate: left|right ; label: right|left.
+# terminals derived: pmos -> top=source bot=drain ; nmos -> top=drain bot=source.
 devices:
-  - {name: M0,  kind: pmos, x: 6.0, y: 9.0, gate: left,  label: right, role: tail}
-  - {name: M9,  kind: pmos, x: 2.6, y: 9.0, gate: left,  label: right, role: mirror-ref}
-  - {name: M10, kind: pmos, x: 9.4, y: 9.0, gate: right, label: left,  role: mirror-out}
-  - {name: M7,  kind: pmos, x: 2.6, y: 7.5, gate: left,  label: right, role: pcascode-L}
-  - {name: M8,  kind: pmos, x: 9.4, y: 7.5, gate: right, label: left,  role: pcascode-R}
-  - {name: M1,  kind: pmos, x: 4.8, y: 7.5, gate: left,  label: right, role: input+}
-  - {name: M2,  kind: pmos, x: 7.2, y: 7.5, gate: right, label: left,  role: input-}
-  - {name: M5,  kind: nmos, x: 2.6, y: 5.0, gate: left,  label: right, role: ncascode-L}
-  - {name: M6,  kind: nmos, x: 9.4, y: 5.0, gate: right, label: left,  role: ncascode-R}
-  - {name: M3,  kind: nmos, x: 2.6, y: 3.0, gate: left,  label: right, role: sink-L}
-  - {name: M4,  kind: nmos, x: 9.4, y: 3.0, gate: right, label: left,  role: sink-R}
+  # ---- input stage (far left) ----
+  - {name: M0, kind: pmos, x: 2.7, y: 9.0, gate: left,  label: right, role: tail}
+  - {name: M2, kind: pmos, x: 2.0, y: 6.8, gate: left,  label: left,  role: input- (outer, folds to far col-2)}
+  - {name: M1, kind: pmos, x: 3.4, y: 6.8, gate: right, label: right, role: input+ (inner, folds to near col-1)}
+  # ---- column 1 = left branch (reference) ----
+  - {name: M9, kind: pmos, x: 6.0, y: 9.0, gate: right, label: left,  role: mirror-ref}
+  - {name: M7, kind: pmos, x: 6.0, y: 7.5, gate: left,  label: right, role: pcascode-L}
+  - {name: M5, kind: nmos, x: 6.0, y: 5.0, gate: left,  label: right, role: ncascode-L}
+  - {name: M3, kind: nmos, x: 6.0, y: 3.0, gate: left,  label: right, role: sink-L}
+  # ---- column 2 = right branch (output) ----
+  - {name: M10, kind: pmos, x: 9.0, y: 9.0, gate: left,  label: right, role: mirror-out}
+  - {name: M8,  kind: pmos, x: 9.0, y: 7.5, gate: right, label: left,  role: pcascode-R}
+  - {name: M6,  kind: nmos, x: 9.0, y: 5.0, gate: right, label: left,  role: ncascode-R}
+  - {name: M4,  kind: nmos, x: 9.0, y: 3.0, gate: right, label: left,  role: sink-R}
 
 rail_connections:
   VDD: [M0.top, M9.top, M10.top]
   VSS: [M3.bot, M4.bot]
 
-# Each path point is either "Dev.term" (resolved to coords) or [x, y] waypoint.
+# path points: "Dev.term" (resolved) or [x, y] waypoint.
 wires:
-  - {net: ntail, path: [M1.top, [4.8, 8.2], [7.2, 8.2], M2.top]}
-  - {net: ntail, path: [M0.bot, [6.0, 8.2]]}
+  - {net: ntail, path: [M2.top, [2.0, 7.7], [3.4, 7.7], M1.top]}
+  - {net: ntail, path: [M0.bot, [2.7, 7.7]]}
   - {net: nA3,   path: [M9.bot, M7.top]}
   - {net: nA2,   path: [M7.bot, M5.top]}
   - {net: nA,    path: [M5.bot, M3.top]}
   - {net: nB3,   path: [M10.bot, M8.top]}
   - {net: OUT,   path: [M8.bot, M6.top]}
   - {net: nB,    path: [M6.bot, M4.top]}
-  - {net: nA,    path: [M1.bot, [4.8, 4.0], [2.6, 4.0]]}
-  - {net: nB,    path: [M2.bot, [7.2, 4.0], [9.4, 4.0]]}
-  - {net: mir,   path: [[2.6, 6.2], [1.2, 6.2], [1.2, 9.7], [10.6, 9.7], [10.6, 9.0], M10.gate]}
-  - {net: mir,   path: [[1.2, 9.0], M9.gate]}
-  - {net: OUT,   path: [[9.4, 6.2], [10.7, 6.2]]}
+  - {net: nA,    path: [M1.bot, [3.4, 4.0], [6.0, 4.0]]}                          # M1 (inner) drain -> col-1 fold node nA
+  - {net: nB,    path: [M2.bot, [2.0, 2.0], [8.4, 2.0], [8.4, 4.0], [9.0, 4.0]]}  # M2 (outer) drain wraps under to col-2 fold node nB
+  - {net: mir,   path: [[6.0, 6.2], [6.8, 6.2], [6.8, 9.0], M10.gate]}         # nA2 bus up between columns -> M10 gate
+  - {net: mir,   path: [[6.8, 9.0], M9.gate]}                                  # -> M9 gate
+  - {net: OUT,   path: [[9.0, 6.2], [10.0, 6.2]]}
 
-dots: [[4.8, 8.2], [6.0, 8.2], [7.2, 8.2], [2.6, 4.0], [9.4, 4.0], [2.6, 6.2], [1.2, 9.0], [9.4, 6.2]]
+dots: [[2.7, 7.7], [6.0, 4.0], [9.0, 4.0], [6.0, 6.2], [6.8, 9.0], [9.0, 6.2]]
 
 bias_pins:
   - {at: M0.gate, name: Vb_tail, side: left}
@@ -84,9 +88,9 @@ bias_pins:
 ports:
   - {at: M1.gate, name: "VIN+", kind: in}
   - {at: M2.gate, name: "VIN-", kind: in}
-  - {xy: [10.7, 6.2], name: OUT, kind: out}
+  - {xy: [10.0, 6.2], name: OUT, kind: out}
 
 notes:
-  - "Left branch M9-M7-M5-M3 is the reference; right branch M10-M8-M6-M4 is the output."
+  - "Col-1 (M9-M7-M5-M3) is the reference branch; col-2 (M10-M8-M6-M4) is the output branch."
   - "OUT = M8 drain = M6 drain (single-ended high-impedance node)."
-  - "Input drains fold down (M1->nA, M2->nB) into the NMOS sink/cascode nodes."
+  - "Input drains fold to the NMOS fold nodes: M1->nA (col-1), M2->nB (col-2)."
