@@ -1,0 +1,45 @@
+// OTA_V2 recycling folded cascode - tsmc18, ideal bias, stim=diff
+simulator lang=spectre
+global 0
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=pre_simu
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=tt_lib
+
+Vdd   (vdd   0)     vsource dc=1.8 mag=0
+Vcm   (vincm 0)     vsource dc=0.3 mag=0
+Vbt   (vbtail 0)    vsource dc=1.29
+Vbnc  (vbnc  0)     vsource dc=0.9
+Vbpc  (vbpc  0)     vsource dc=0.95
+Vinp  (vinp  vincm) vsource dc=0 mag=1
+
+// open-loop AC bias: DC short (L) + level-shift sets OUT=vcm+voff; AC open
+Lfb  (out  nls)  inductor l=1T
+Voff (nls  vinn) vsource dc=0.6
+Cac  (vinn vincm) capacitor c=1T
+
+nodeset out=0.8999999999999999 nls=0.8999999999999999 vinn=0.3 \
+    ntail=0.85 x1=0.45 x2=0.45 nA=0.25 nB=0.25 nA2=1.45 nA3=1.55 nB3=1.55
+
+// ---- recycling folded cascode core (d g s b) ----
+M0   (ntail vbtail vdd  vdd) pch_mac w=8.0u l=1.0u
+M1A  (nA    vinp  ntail vdd) pch_mac w=1.5u l=1.0u
+M1B  (x2    vinp  ntail vdd) pch_mac w=1.5u l=1.0u
+M2A  (nB    vinn  ntail vdd) pch_mac w=1.5u l=1.0u
+M2B  (x1    vinn  ntail vdd) pch_mac w=1.5u l=1.0u
+// recycling mirrors (cross-coupled): M2B->x1->MN1A@nA ; M1B->x2->MN2A@nB
+// 1:K via K parallel UNIT devices (multi=K) -- same model bin, exact ratio
+MN1B (x1    x1    0     0)   nch_mac w=0.22u l=0.35u
+MN1A (nA    x1    0     0)   nch_mac w=0.22u l=0.35u multi=3
+MN2B (x2    x2    0     0)   nch_mac w=0.22u l=0.35u
+MN2A (nB    x2    0     0)   nch_mac w=0.22u l=0.35u multi=3
+// cascodes + mirror tops (same as FC)
+M5   (nA2   vbnc  nA    0)   nch_mac w=1.0u l=0.5u
+M6   (out   vbnc  nB    0)   nch_mac w=1.0u l=0.5u
+M7   (nA2   vbpc  nA3   vdd) pch_mac w=2.0u l=0.35u
+M8   (out   vbpc  nB3   vdd) pch_mac w=2.0u l=0.35u
+M9   (nA3   nA2   vdd   vdd) pch_mac w=2.0u l=0.35u
+M10  (nB3   nA2   vdd   vdd) pch_mac w=2.0u l=0.35u
+CL   (out 0) capacitor c=0.05p
+
+save out
+opInfo info what=oppoint where=rawfile
+ac ac start=1 stop=1G dec=40

@@ -1,0 +1,101 @@
+# =============================================================================
+# AUTHORITATIVE source for the OTA_V2 (recycling folded cascode) figure.
+# Mirrors run_ota_v2.py netlist. Edit here -> tools/render_schematic.py -> svg/png.
+# =============================================================================
+meta:
+  title: "OTA_V2 — recycling folded cascode (PMOS input)"
+  one_liner: "Split input pair M1A/B,M2A/B; fold-node sinks become 1:K signal mirrors (cross-coupled) -> Gm=(1+K)*gm_half. Output stage = FC unchanged."
+  visible_internal_structure:
+    - "11 MOS: tail M0, input quad M1A/M1B/M2A/M2B, recycling mirrors MN1A/B,MN2A/B, cascodes M5-M8, mirror tops M9/M10"
+    - "vs FC: M3/M4 constant sinks replaced by 1:K mirrors driven by recycled input halves; V_BN bias pin eliminated"
+  omitted_details: ["W/L sizes", "bulk pins (PMOS bulks=VDD, NMOS=VSS)"]
+  conventions:
+    pmos: "red; source=top terminal"
+    nmos: "blue; source=bottom terminal"
+    crossings: "wire crossings without dots are NOT connected (recycling paths cross)"
+  exports: {svg: ota5t/ota_v2/ota_v2_schematic.svg, png: ota5t/ota_v2/ota_v2_schematic.png}
+
+canvas: {xlim: [0, 14], ylim: [0, 11.2], figsize: [14.4, 11.4], title_y: 11.0}
+
+rails:
+  - {net: VDD, y: 10.3, x0: 0.6, x1: 13.4}
+  - {net: VSS, y: 0.8,  x0: 0.6, x1: 13.4}
+
+# pmos: top=source bot=drain ; nmos: top=drain bot=source.
+devices:
+  - {name: M0,   kind: pmos, x: 6.8,  y: 9.2, gate: left,  label: right, role: "tail 2Ib (G=Vb_tail)"}
+  - {name: M1A,  kind: pmos, x: 4.6,  y: 7.4, gate: right, label: left,  role: "input half (G=VIN+, D=nA)"}
+  - {name: M1B,  kind: pmos, x: 5.8,  y: 7.4, gate: left,  label: right, role: "recycled half (G=VIN+, D=x2)"}
+  - {name: M2B,  kind: pmos, x: 7.8,  y: 7.4, gate: right, label: right, role: "recycled half (G=VIN-, D=x1)"}
+  - {name: M2A,  kind: pmos, x: 9.0,  y: 7.4, gate: left,  label: right, role: "input half (G=VIN-, D=nB)"}
+  - {name: M9,   kind: pmos, x: 2.6,  y: 9.2, gate: left,  label: right, role: "mirror top (G=nA2)"}
+  - {name: M10,  kind: pmos, x: 11.4, y: 9.2, gate: right, label: left,  role: "mirror top (G=nA2)"}
+  - {name: M7,   kind: pmos, x: 2.6,  y: 7.6, gate: left,  label: right, role: "P cascode (G=Vb_pc)"}
+  - {name: M8,   kind: pmos, x: 11.4, y: 7.6, gate: right, label: left,  role: "P cascode (G=Vb_pc)"}
+  - {name: M5,   kind: nmos, x: 2.6,  y: 5.3, gate: left,  label: right, role: "N cascode (G=Vb_nc)"}
+  - {name: M6,   kind: nmos, x: 11.4, y: 5.3, gate: right, label: left,  role: "N cascode (G=Vb_nc)"}
+  - {name: MN1A, kind: nmos, x: 2.6,  y: 3.0, gate: right, label: left,  role: "mirror out K units (G=x1, D=nA)"}
+  - {name: MN1B, kind: nmos, x: 4.3,  y: 3.0, gate: left,  label: right, role: "mirror diode (D=G=x1)"}
+  - {name: MN2B, kind: nmos, x: 9.7,  y: 3.0, gate: right, label: left,  role: "mirror diode (D=G=x2)"}
+  - {name: MN2A, kind: nmos, x: 11.4, y: 3.0, gate: left,  label: right, role: "mirror out K units (G=x2, D=nB)"}
+
+blocks: []
+
+rail_connections:
+  VDD: [M0.top, M9.top, M10.top]
+  VSS: [MN1A.bot, MN1B.bot, MN2B.bot, MN2A.bot]
+
+wires:
+  # --- ntail: M0.D -> input quad sources ---
+  - {net: ntail, path: [M0.bot, [6.8, 8.2]]}
+  - {net: ntail, path: [[4.6, 8.2], [9.0, 8.2]]}
+  - {net: ntail, path: [M1A.top, [4.6, 8.2]]}
+  - {net: ntail, path: [M1B.top, [5.8, 8.2]]}
+  - {net: ntail, path: [M2B.top, [7.8, 8.2]]}
+  - {net: ntail, path: [M2A.top, [9.0, 8.2]]}
+  # --- inputs: shared gates per side + port stubs ---
+  - {net: VINP, path: [M1A.gate, M1B.gate]}
+  - {net: VINP, path: [[5.2, 7.4], [5.2, 7.0]]}
+  - {net: VINN, path: [M2B.gate, M2A.gate]}
+  - {net: VINN, path: [[8.4, 7.4], [8.4, 7.0]]}
+  # --- nA: M1A.D down + across to left stack (M5.S - MN1A.D segment) ---
+  - {net: nA, path: [M5.bot, MN1A.top]}
+  - {net: nA, path: [M1A.bot, [4.6, 4.4], [2.6, 4.4]]}
+  # --- nB: M2A.D down + across to right stack ---
+  - {net: nB, path: [M6.bot, MN2A.top]}
+  - {net: nB, path: [M2A.bot, [9.0, 4.4], [11.4, 4.4]]}
+  # --- recycling cross-coupling (the two long diagonals; crossings=no connect) ---
+  - {net: x2, path: [M1B.bot, [5.8, 4.0], [9.7, 4.0], MN2B.top]}
+  - {net: x2, path: [MN2B.gate, [10.45, 3.0], [10.65, 3.0], MN2A.gate]}
+  - {net: x1, path: [M2B.bot, [7.8, 3.7], [4.3, 3.7], MN1B.top]}
+  - {net: x1, path: [MN1B.gate, [3.55, 3.0], [3.35, 3.0], MN1A.gate]}
+  # --- left/right stack internals ---
+  - {net: nA3, path: [M9.bot, M7.top]}
+  - {net: nB3, path: [M10.bot, M8.top]}
+  - {net: nA2, path: [M7.bot, M5.top]}
+  - {net: OUT, path: [M8.bot, M6.top]}
+  # --- mirror-gate bus: nA2 -> M9.gate & M10.gate (top route) ---
+  - {net: nA2, path: [[2.6, 6.4], [1.2, 6.4], [1.2, 9.85], [12.8, 9.85], [12.8, 9.2], M10.gate]}
+  - {net: nA2, path: [[1.2, 9.2], M9.gate]}
+  # --- output ---
+  - {net: OUT, path: [[11.4, 6.45], [12.8, 6.45]]}
+
+dots: [[6.8, 8.2], [4.6, 8.2], [5.8, 8.2], [7.8, 8.2], [5.2, 7.4], [8.4, 7.4],
+       [2.6, 4.4], [11.4, 4.4], [2.6, 6.4], [1.2, 9.2], [11.4, 6.45]]
+
+bias_pins: []
+
+ports:
+  - {at: M0.gate,  name: "Vb_tail", kind: bias}
+  - {at: M7.gate,  name: "Vb_pc", kind: bias}
+  - {at: M8.gate,  name: "Vb_pc", kind: bias}
+  - {at: M5.gate,  name: "Vb_nc", kind: bias}
+  - {at: M6.gate,  name: "Vb_nc", kind: bias}
+  - {xy: [5.2, 7.0],  name: "VIN+", kind: in}
+  - {xy: [8.4, 7.0],  name: "VIN-", kind: in}
+  - {xy: [12.8, 6.45], name: "OUT", kind: out}
+
+notes:
+  - "Recycling: M2B(VIN-) drives diode MN1B(x1) -> MN1A sinks K*i at nA, ADDING to M1A's signal; symmetric on the right. Gm=(1+K)*gm_half."
+  - "DC: each input half carries Ib/2; mirror outputs K*Ib/2; cascode branches (K-1)*Ib/2; Itot=(K+1)*Ib."
+  - "vs FC: V_BN bias eliminated (mirrors self-bias); output stage and swing unchanged; PMOS input keeps Vcm=0.3V capability."

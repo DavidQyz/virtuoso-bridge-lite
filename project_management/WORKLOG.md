@@ -11,6 +11,31 @@ generalizable workflow lessons go to `project_management/agentos_lesson_candidat
 
 ---
 
+## 2026-06-12 (later) — OTA_V3 paused at a decision point (class-AB stage)
+
+- New device attempt `ota5t/ota_v3/`: RFC stage 1 (~2.1uA, FC-like) + Monticelli
+  class-AB output + Miller comp. AC converged: A0=111.9dB, GBW=57.5MHz, PM=62°,
+  7.05uW, PSRR 71dB.
+- **Key finding**: at CL=50fF the comp cap gates the slew (SR=I1/Cc): 3-way
+  buffer-step test gives FC 12/16, V2 40/70 (wins), V3 25/47 V/us. Ahuja comp
+  worse here (fold-node resonance forces bigger Cc). Class-AB's value needs a
+  heavier/nonlinear load to show.
+- User defined the next-phase load: **nmos5v gate, w=6u l=600n nf=4** (OTA out
+  drives that gate). Design paused until user resumes ("next year") — resume
+  plan + full state in Claude memory `project_ota_v3`; schematic figure done
+  (`ota_v3_schematic.yaml`, input-left/load-middle/output-right per user).
+
+## 2026-06-12 — OTA_V2: recycling folded cascode (GBW ×3.1)
+
+- New device `ota5t/ota_v2/`: RFC redesign of fc_ota per spec "same DC gain,
+  ~2x power, maximize GBW, keep Vcm=0.3V + medium swing".
+- Result: A0 75.6dB (+1.1), **GBW 69.5MHz (×3.1)**, PM 61°, 7.17µW (1.89×),
+  PSRR 67dB, one bias pin eliminated. Full report: `ota5t/ota_v2/README.md`.
+- Key findings recorded there: sub-um mirrors need unit devices (model-bin
+  trap gave 1.6:1 from a 3:1 W ratio); non-dominant poles bind (wider input
+  pair trades 24% GBW for −24° PM); current scaling is PM-neutral in weak
+  inversion (GBW is linearly purchasable with power, table in README §4).
+
 ## 2026-06-11 — AgentOS onboarding (Stage 0 + Stage 1)
 
 - Adopted the AgentOS management framework. Control hub created at

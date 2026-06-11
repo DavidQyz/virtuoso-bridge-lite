@@ -9,7 +9,8 @@
 | 文件夹 | 器件 | Virtuoso cell | 关键指标 | 文档 |
 |---|---|---|---|---|
 | [ota_5t/](ota_5t/) | 五管 OTA | test/OTA_5T ✅ | A0=39.6dB, GBW=16.9MHz, PM=87°, 36.8µW | [README](ota_5t/README.md) |
-| [fc_ota/](fc_ota/) | 折叠共源共栅 PMOS 输入 OTA | （netlist 级） | A0=74.5dB, GBW=22.3MHz, PM=78°, ≈3.3µW, Vcm=0.3V | [README](fc_ota/README.md) |
+| [fc_ota/](fc_ota/) | 折叠共源共栅 PMOS 输入 OTA | （netlist 级） | A0=74.5dB, GBW=22.3MHz, PM=78°, 3.8µW, Vcm=0.3V | [README](fc_ota/README.md) |
+| [ota_v2/](ota_v2/) | 回收型折叠共源共栅（RFC，FC 提速版） | （netlist 级） | A0=75.6dB, **GBW=69.5MHz（×3.1）**, PM=61°, 7.2µW | [README](ota_v2/README.md) |
 | [comp_cg/](comp_cg/) | 共栅比较器（0-5V 输入） | test/COMP_CG ✅ | tprop=1.015ns@INN=1V, 全范围 0.74-2.77ns, 7-24µW | [README](comp_cg/README.md) |
 | [comp_v2/](comp_v2/) | 双阈值比较器（V4 提速版） | test/COMP_V2 ✅ | tprop=0.923ns@INN=1V（−9%）, 高端 −27%, 功耗持平 | [README](comp_v2/README.md) |
 

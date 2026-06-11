@@ -1,0 +1,52 @@
+// OTA_V3 RFC + class-AB, AC stim=cm
+simulator lang=spectre
+global 0
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=pre_simu
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=tt_lib
+
+Vdd   (vdd   0)     vsource dc=1.8 mag=0
+Vcm   (vincm 0)     vsource dc=0.3 mag=1
+Vbt   (vbtail 0)    vsource dc=1.29
+Vbnc  (vbnc  0)     vsource dc=0.9
+Vbpc  (vbpc  0)     vsource dc=0.95
+Vinp  (vinp  vincm) vsource dc=0 mag=0
+
+// open-loop AC bias: DC short (L) + level shift -> stage-1 out (gn) ~ VGS(MN_O)
+Lfb  (out  nls)  inductor l=1T
+Voff (nls  vinn) vsource dc=0.6
+Cac  (vinn vincm) capacitor c=1T
+
+nodeset out=0.9 nls=0.9 vinn=0.3 ntail=0.85 x1=0.45 x2=0.45 \
+    nA=0.25 nB=0.25 nA2=1.45 nA3=1.55 nB3=1.55 gn=0.55 gp=1.25
+
+// ---- stage 1: recycling folded cascode (d g s b) ----
+// NOTE input assignment: stage 2 inverts, so the DRIVEN input (vinp) sits on
+// the M2 side and FEEDBACK (vinn) on the M1 side to keep overall fb negative.
+M0   (ntail vbtail vdd  vdd) pch_mac w=4.0u l=1.0u
+M1A  (nA    vinn  ntail vdd) pch_mac w=1.5u l=1.0u
+M1B  (x2    vinn  ntail vdd) pch_mac w=1.5u l=1.0u
+M2A  (nB    vinp  ntail vdd) pch_mac w=1.5u l=1.0u
+M2B  (x1    vinp  ntail vdd) pch_mac w=1.5u l=1.0u
+MN1B (x1    x1    0     0)   nch_mac w=0.22u l=0.35u
+MN1A (nA    x1    0     0)   nch_mac w=0.22u l=0.35u multi=3
+MN2B (x2    x2    0     0)   nch_mac w=0.22u l=0.35u
+MN2A (nB    x2    0     0)   nch_mac w=0.22u l=0.35u multi=3
+M5   (nA2   vbnc  nA    0)   nch_mac w=1.0u l=0.5u
+M6   (gn    vbnc  nB    0)   nch_mac w=1.0u l=0.5u
+M7   (nA2   vbpc  nA3   vdd) pch_mac w=2.0u l=0.35u
+M8   (gp    vbpc  nB3   vdd) pch_mac w=2.0u l=0.35u
+M9   (nA3   nA2   vdd   vdd) pch_mac w=2.0u l=0.35u
+M10  (nB3   nA2   vdd   vdd) pch_mac w=2.0u l=0.35u
+// ---- class-AB level shift: gp = gn + vab (ideal Monticelli battery) ----
+Vab  (gp    gn)   vsource dc=0.85
+// ---- stage 2: push-pull common source ----
+MN_O (out   gn    0     0)   nch_mac w=2.0u l=0.35u
+MP_O (out   gp    vdd   vdd) pch_mac w=5.0u l=0.35u
+// ---- Miller compensation ----
+Cc   (out   ncz)  capacitor c=0.05p
+Rz   (ncz   gn)   resistor r=60.0k
+CL   (out   0)    capacitor c=0.05p
+
+save out gn gp
+opInfo info what=oppoint where=rawfile
+ac ac start=1 stop=1G dec=40

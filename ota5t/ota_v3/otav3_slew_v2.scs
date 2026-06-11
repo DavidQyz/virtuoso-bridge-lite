@@ -1,0 +1,34 @@
+// OTA_V2 slew: buffer step
+simulator lang=spectre
+global 0
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=pre_simu
+include "/mnt/hgfs/share_folder/tsmc18_HRI_1K_1.8V_5V_1.0fF_GA_GB_1P6M_4K_MIM_15K/models/spectre/c018bcd_gen2_v1d6_usage.scs" section=tt_lib
+
+Vdd   (vdd   0)     vsource dc=1.8
+Vstep (vinp  0)     vsource type=pulse val0=0.35 val1=0.95 delay=2e-08 \
+    rise=1n fall=1n width=4e-07
+Rfb   (out  vinn)   resistor r=1m
+
+Vbt   (vbtail 0)    vsource dc=1.29
+Vbnc  (vbnc  0)     vsource dc=0.90
+Vbpc  (vbpc  0)     vsource dc=0.95
+nodeset out=0.65 vinn=0.65 ntail=0.85 x1=0.45 x2=0.45 nA=0.25 nB=0.25 \
+    nA2=1.45 nA3=1.55 nB3=1.55
+M0   (ntail vbtail vdd  vdd) pch_mac w=8u l=1u
+M1A  (nA    vinp  ntail vdd) pch_mac w=1.5u l=1u
+M1B  (x2    vinp  ntail vdd) pch_mac w=1.5u l=1u
+M2A  (nB    vinn  ntail vdd) pch_mac w=1.5u l=1u
+M2B  (x1    vinn  ntail vdd) pch_mac w=1.5u l=1u
+MN1B (x1    x1    0     0)   nch_mac w=0.22u l=0.35u
+MN1A (nA    x1    0     0)   nch_mac w=0.22u l=0.35u multi=3
+MN2B (x2    x2    0     0)   nch_mac w=0.22u l=0.35u
+MN2A (nB    x2    0     0)   nch_mac w=0.22u l=0.35u multi=3
+M5   (nA2   vbnc  nA    0)   nch_mac w=1u l=0.5u
+M6   (out   vbnc  nB    0)   nch_mac w=1u l=0.5u
+M7   (nA2   vbpc  nA3   vdd) pch_mac w=2u l=0.35u
+M8   (out   vbpc  nB3   vdd) pch_mac w=2u l=0.35u
+M9   (nA3   nA2   vdd   vdd) pch_mac w=2u l=0.35u
+M10  (nB3   nA2   vdd   vdd) pch_mac w=2u l=0.35u
+CL   (out 0) capacitor c=50f
+save out vinp
+tr tran stop=8.2e-07 errpreset=conservative maxstep=200p
