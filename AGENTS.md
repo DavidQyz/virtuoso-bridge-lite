@@ -350,3 +350,29 @@ When working on a task, check this table to find relevant skills and references.
 | **Parameter optimization** | `optimizer` | `skills/optimizer/SKILL.md` | — |
 
 All reference paths are relative to the skill directory (e.g. `skills/virtuoso/references/layout-skill-api.md`).
+
+## Session continuity (AgentOS)
+
+This project is managed under AgentOS (control hub: `GitHub/agentos/`,
+registry id `virtuoso-bridge`). Two lightweight rules keep work continuous
+across sessions and across the IDE plugin vs terminal:
+
+1. **At session start** — read the top entries of
+   [`project_management/WORKLOG.md`](project_management/WORKLOG.md) to recover
+   what was done and why. (The Claude memory index auto-loads; the WORKLOG is
+   the portable, git-tracked record that survives outside Claude.)
+
+2. **When wrapping up substantial work** — append a short entry to
+   `project_management/WORKLOG.md` (newest on top). Save durable design or
+   process knowledge to Claude memory. If a *generalizable workflow* lesson
+   emerged, note it in `project_management/agentos_lesson_candidates.md`
+   (promotion to the hub needs explicit user approval).
+
+Convenience: the `/eod` command runs the wrap-up — it drafts the WORKLOG entry,
+shows what changed, and proposes a commit. Pushing is never automatic: this is a
+**public fork** (origin `DavidQyz`, upstream `Arcadia-1`), so a push publishes —
+confirm intent before pushing. Keep `.env` and `.claude/` gitignored.
+
+Records location note: `docs/` is a published GitHub Pages site
+(virtuoso-bridge.tokenzhang.com), so AgentOS project-management records live in
+top-level `project_management/`, not under `docs/`.
