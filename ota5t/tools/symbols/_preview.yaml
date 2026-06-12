@@ -1,0 +1,19 @@
+# Symbol-library preview sheet: the 4 MOS cells side by side (gate left + right).
+meta:
+  title: "MOS symbol library preview"
+canvas: {xlim: [0, 12], ylim: [0, 6], figsize: [10, 5], title_y: 5.6}
+rails: []
+devices:
+  - {name: "nmos_2v",  kind: nmos, vclass: 2v, x: 2.0,  y: 4.0, gate: left,  label: right}
+  - {name: "pmos_2v",  kind: pmos, vclass: 2v, x: 5.0,  y: 4.0, gate: left,  label: right}
+  - {name: "nmos_5v",  kind: nmos, vclass: 5v, x: 8.0,  y: 4.0, gate: left,  label: right}
+  - {name: "pmos_5v",  kind: pmos, vclass: 5v, x: 11.0, y: 4.0, gate: left,  label: right}
+  - {name: "gate=right", kind: nmos, vclass: 2v, x: 2.0, y: 1.5, gate: right, label: left}
+  - {name: "gate=right", kind: pmos, vclass: 2v, x: 5.0, y: 1.5, gate: right, label: left}
+  - {name: "5v N R",   kind: nmos, vclass: 5v, x: 8.0,  y: 1.5, gate: right, label: left}
+  - {name: "5v P R",   kind: pmos, vclass: 5v, x: 11.0, y: 1.5, gate: right, label: left}
+wires: []
+dots: []
+ports:
+  - {xy: [2.0, 4.62],  name: "D", kind: out}
+  - {xy: [2.0, 3.38],  name: "S", kind: in}

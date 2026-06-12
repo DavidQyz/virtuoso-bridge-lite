@@ -1,0 +1,15 @@
+# MOS symbol cell: 2V PMOS -- faithful to the reference (three-stub style).
+# Like nmos_2v but with a GATE CIRCLE (PMOS marker) on the gate lead. No bulk arrow.
+name: pmos_2v
+kind: pmos
+anchors: {top: [0.20, 0.55], bot: [0.20, -0.55], gate: [-0.44, 0.0], bulk: [0.46, 0.0]}
+prims:
+  - [L, 0.0, -0.30, 0.0, 0.30, 2.6, d]      # channel bar
+  - [L, -0.16, -0.30, -0.16, 0.30, 1.8, w]  # gate bar (single line = 2V)
+  - [C, -0.215, 0.0, 0.055, w]              # gate circle (PMOS marker)
+  - [L, -0.27, 0.0, -0.44, 0.0, 1.3, w]     # gate lead (short, after circle)
+  - [L, 0.0, 0.22, 0.20, 0.22, 1.3, w]      # top stub
+  - [L, 0.20, 0.22, 0.20, 0.55, 1.3, w]     # drain lead (up to D)
+  - [L, 0.0, 0.0, 0.46, 0.0, 1.2, w]        # middle stub -> B
+  - [L, 0.0, -0.22, 0.20, -0.22, 1.3, w]    # bottom stub
+  - [L, 0.20, -0.22, 0.20, -0.55, 1.3, w]   # source lead (down to S)

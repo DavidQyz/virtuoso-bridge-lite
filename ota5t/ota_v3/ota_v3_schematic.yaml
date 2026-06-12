@@ -1,72 +1,70 @@
 # =============================================================================
 # AUTHORITATIVE source for the OTA_V3 figure (RFC stage1 + class-AB stage2).
-# Layout per user spec: input stage LEFT, stage-1 (folded-cascode) load MIDDLE,
-# class-AB output stage RIGHT, load cap far right.
+# Style: 4-terminal MOS (meta.mos4t), orthogonal wiring only.
+# Layout: input LEFT / stage-1 cascode load MIDDLE / class-AB output RIGHT.
 # Edit here -> tools/render_schematic.py -> svg/png.
 # =============================================================================
 meta:
   title: "OTA_V3 — RFC stage 1 + class-AB output stage"
-  one_liner: "RFC first stage (FC-power, 2.3x Gm) -> Monticelli floating battery V_AB splits gn/gp -> push-pull MN_O/MP_O; Miller Cc+Rz; near-rail swing, SR decoupled from IQ."
+  mos4t: true
+  one_liner: "RFC first stage (FC-power, 2.3x Gm) -> V_AB floating battery splits gp/gn -> push-pull MP_O/MN_O; Miller Cc+Rz; near-rail swing, SR decoupled from IQ."
   visible_internal_structure:
-    - "stage1: tail M0, split input quad M1A/B,M2A/B, recycling mirrors MN1x/MN2x, cascode load M5-M10"
-    - "stage2: MN_O/MP_O push-pull; V_AB floating battery (ideal Monticelli bias); Cc+Rz Miller comp"
-  omitted_details: ["W/L sizes", "bulk pins (PMOS=VDD, NMOS=VSS)", "real translinear class-AB bias loop (modeled as ideal V_AB)"]
+    - "stage1: tail M0, split input quad M1A/B,M2A/B, recycling mirrors, cascode load M5-M10"
+    - "stage2: V_AB (ideal Monticelli battery, circle symbol) + MP_O/MN_O push-pull; Cc+Rz Miller comp; CL block"
+  omitted_details: ["W/L sizes", "real translinear class-AB bias loop (modeled as ideal V_AB)"]
   conventions:
-    pmos: "red; source=top"
-    nmos: "blue; source=bottom"
+    pmos: "red; source=top; bulk arrow OUT of channel"
+    nmos: "blue; source=bottom; bulk arrow INTO channel"
+    vclass: "all devices here are 1.8/2V (single gate bar); 5V devices would show a doubled gate bar"
     crossings: "crossings without dots are NOT connected"
+    polarity: "stage 2 inverts: M2 side is the NON-inverting input VIN+, M1 side is VIN-"
   exports: {svg: ota5t/ota_v3/ota_v3_schematic.svg, png: ota5t/ota_v3/ota_v3_schematic.png}
 
-canvas: {xlim: [0, 16.6], ylim: [0, 11.2], figsize: [16.8, 11.4], title_y: 11.0}
+canvas: {xlim: [0, 17.2], ylim: [0, 11.2], figsize: [17.4, 11.4], title_y: 11.0}
 
 rails:
-  - {net: VDD, y: 10.3, x0: 0.6, x1: 16.0}
-  - {net: VSS, y: 0.8,  x0: 0.6, x1: 16.0}
+  - {net: VDD, y: 10.4, x0: 0.6, x1: 16.6}
+  - {net: VSS, y: 0.8,  x0: 0.6, x1: 16.6}
 
 devices:
-  # ---- INPUT STAGE (left) ----
-  - {name: M0,   kind: pmos, x: 3.9,  y: 9.2, gate: left,  label: right, role: "tail 2Ib (G=Vb_tail)"}
-  - {name: M1A,  kind: pmos, x: 1.8,  y: 7.2, gate: right, label: left,  role: "input half (VIN+ -> nA)"}
-  - {name: M1B,  kind: pmos, x: 3.0,  y: 7.2, gate: left,  label: right, role: "recycled half (VIN+ -> x2)"}
-  - {name: M2B,  kind: pmos, x: 4.6,  y: 7.2, gate: right, label: right, role: "recycled half (VIN- -> x1)"}
-  - {name: M2A,  kind: pmos, x: 6.0,  y: 7.2, gate: left,  label: right, role: "input half (VIN- -> nB)"}
-  - {name: MN1A, kind: nmos, x: 1.2,  y: 2.6, gate: right, label: left,  role: "mirror out K units (-> nA)"}
-  - {name: MN1B, kind: nmos, x: 2.6,  y: 2.6, gate: left,  label: left,  role: "mirror diode x1"}
-  - {name: MN2B, kind: nmos, x: 5.0,  y: 2.6, gate: right, label: left,  role: "mirror diode x2"}
-  - {name: MN2A, kind: nmos, x: 6.4,  y: 2.6, gate: left,  label: right, role: "mirror out K units (-> nB)"}
+  # ---- INPUT STAGE (left). A-halves share a column with their mirror sink ----
+  - {name: M0,   kind: pmos, x: 4.2,  y: 9.3, gate: left,  label: right, role: "tail 2Ib"}
+  - {name: M1A,  kind: pmos, x: 1.6,  y: 7.3, gate: right, label: left, role: "input half (VIN- -> nA)"}
+  - {name: M1B,  kind: pmos, x: 3.6,  y: 7.3, gate: left,  label: left,  role: "recycled half (VIN- -> x2)"}
+  - {name: M2B,  kind: pmos, x: 5.6,  y: 7.3, gate: right, label: right, role: "recycled half (VIN+ -> x1)"}
+  - {name: M2A,  kind: pmos, x: 7.6,  y: 7.3, gate: left,  label: right, role: "input half (VIN+ -> nB)"}
+  # mirrors moved UNDER their cascode rib (MN1A under M5@9.4, MN2A under M6@12.2)
+  - {name: MN1B, kind: nmos, x: 8.4,  y: 2.6, gate: right, label: left,  role: "mirror diode x1"}
+  - {name: MN1A, kind: nmos, x: 9.4,  y: 2.6, gate: left,  label: left,  role: "mirror out K units (nA)"}
+  - {name: MN2B, kind: nmos, x: 11.2, y: 2.6, gate: right, label: right, role: "mirror diode x2"}
+  - {name: MN2A, kind: nmos, x: 12.2, y: 2.6, gate: left,  label: right, role: "mirror out K units (nB)"}
   # ---- STAGE-1 LOAD (middle): folded cascode stacks ----
-  - {name: M9,   kind: pmos, x: 7.2,  y: 9.2, gate: left,  label: right, role: "mirror top (G=nA2)"}
-  - {name: M10,  kind: pmos, x: 10.2, y: 9.2, gate: right, label: left,  role: "mirror top (G=nA2)"}
-  - {name: M7,   kind: pmos, x: 7.2,  y: 7.6, gate: right, label: right, role: "P cascode (G=Vb_pc)"}
-  - {name: M8,   kind: pmos, x: 10.2, y: 7.6, gate: right, label: left,  role: "P cascode -> gp"}
-  - {name: M5,   kind: nmos, x: 7.2,  y: 5.4, gate: right, label: right, role: "N cascode (G=Vb_nc)"}
-  - {name: M6,   kind: nmos, x: 10.2, y: 5.4, gate: right, label: left,  role: "N cascode -> gn"}
+  - {name: M9,   kind: pmos, x: 9.4,  y: 9.3, gate: left,  label: right, role: "mirror top (G=nA2)"}
+  - {name: M10,  kind: pmos, x: 12.2, y: 9.3, gate: right, label: left, role: "mirror top (G=nA2)"}
+  - {name: M7,   kind: pmos, x: 9.4,  y: 7.7, gate: right, label: right, role: "P cascode"}
+  - {name: M8,   kind: pmos, x: 12.2, y: 7.7, gate: left,  label: right, role: "P cascode -> gp"}
+  - {name: M5,   kind: nmos, x: 9.4,  y: 5.7, gate: right, label: right, role: "N cascode"}
+  - {name: M6,   kind: nmos, x: 12.2, y: 5.7, gate: left,  label: right, role: "N cascode -> gn"}
   # ---- CLASS-AB OUTPUT STAGE (right) ----
-  - {name: MP_O, kind: pmos, x: 13.2, y: 8.0, gate: left,  label: right, role: "push (G=gp)"}
-  - {name: MN_O, kind: nmos, x: 13.2, y: 4.6, gate: left,  label: right, role: "pull (G=gn)"}
+  - {name: MP_O, kind: pmos, x: 15.0, y: 8.2, gate: left,  label: right, role: "push (G=gp)"}
+  - {name: MN_O, kind: nmos, x: 15.0, y: 4.8, gate: left,  label: right, role: "pull (G=gn)"}
+
+vsources:
+  - {name: VAB, x: 12.2, y: 6.7}
 
 blocks:
-  - name: VAB
-    x: 10.7
-    y: 5.75
-    w: 1.15
-    h: 1.1
-    title: "V_AB 0.7V\n(floating,\nMonticelli)"
-    pins:
-      - {name: P, side: left, frac: 0.79}
-      - {name: N, side: left, frac: 0.32}
   - name: COMP
-    x: 13.6
-    y: 2.85
-    w: 1.6
-    h: 0.8
-    title: "Cc 0.15p\n+ Rz 40k"
+    x: 14.2
+    y: 2.7
+    w: 1.5
+    h: 0.75
+    title: "Cc 0.05p\n+ Rz 60k"
     pins:
       - {name: A, side: left,  frac: 0.5}
       - {name: B, side: right, frac: 0.5}
   - name: CL
-    x: 15.1
-    y: 5.95
+    x: 15.7
+    y: 6.3
     w: 0.95
     h: 0.7
     title: "CL\n50fF"
@@ -79,63 +77,66 @@ rail_connections:
 
 wires:
   # --- ntail bus ---
-  - {net: ntail, path: [M0.bot, [3.9, 8.1]]}
-  - {net: ntail, path: [[1.8, 8.1], [6.0, 8.1]]}
-  - {net: ntail, path: [M1A.top, [1.8, 8.1]]}
-  - {net: ntail, path: [M1B.top, [3.0, 8.1]]}
-  - {net: ntail, path: [M2B.top, [4.6, 8.1]]}
-  - {net: ntail, path: [M2A.top, [6.0, 8.1]]}
-  # --- inputs (shared gates + port stubs) ---
-  - {net: VINP, path: [M1A.gate, M1B.gate]}
-  - {net: VINP, path: [[2.4, 7.2], [2.4, 6.85]]}
-  - {net: VINN, path: [M2B.gate, M2A.gate]}
-  - {net: VINN, path: [[5.3, 7.2], [5.3, 6.85]]}
-  # --- recycling mirror gate ties ---
-  - {net: x1, path: [MN1A.gate, MN1B.gate]}
+  - {net: ntail, path: [M0.bot, [4.2, 8.3]]}
+  - {net: ntail, path: [[1.6, 8.3], [7.6, 8.3]]}
+  - {net: ntail, path: [M1A.top, [1.6, 8.3]]}
+  - {net: ntail, path: [M1B.top, [3.6, 8.3]]}
+  - {net: ntail, path: [M2B.top, [5.6, 8.3]]}
+  - {net: ntail, path: [M2A.top, [7.6, 8.3]]}
+  # --- inputs: shared gates + port stubs (VIN- on M1 side, VIN+ on M2 side) ---
+  - {net: VINN, path: [M1A.gate, M1B.gate]}
+  - {net: VINN, path: [[2.6, 7.3], [2.6, 6.95]]}
+  - {net: VINP, path: [M2B.gate, M2A.gate]}
+  - {net: VINP, path: [[6.6, 7.3], [6.6, 6.95]]}
+  # --- recycling mirror gate ties (diode beside its output device) ---
+  - {net: x1, path: [MN1B.gate, MN1A.gate]}
   - {net: x2, path: [MN2B.gate, MN2A.gate]}
-  # --- recycled drains -> diodes (cross-coupled) ---
-  - {net: x1, path: [M2B.bot, [4.6, 4.05], [2.6, 4.05], MN1B.top]}
-  - {net: x2, path: [M1B.bot, [3.0, 3.85], [5.0, 3.85], MN2B.top]}
-  # --- fold nodes: nA (left stack), nB (right stack) ---
-  - {net: nA, path: [MN1A.top, [1.2, 4.6], [7.2, 4.6], M5.bot]}
-  - {net: nA, path: [M1A.bot, [1.8, 4.6]]}
-  - {net: nB, path: [MN2A.top, [6.4, 4.3], [10.2, 4.3], M6.bot]}
-  - {net: nB, path: [M2A.bot, [6.0, 4.3]]}
+  # --- recycled input drains -> opposite-leg diodes ---
+  - {net: x1, path: [M2B.bot, [5.6, 3.5], [8.4, 3.5], MN1B.top]}
+  - {net: x2, path: [M1B.bot, [3.6, 3.3], [11.2, 3.3], MN2B.top]}
+  # --- fold nodes: M5.source = MN1A.drain straight vertical; input drain folds in ---
+  - {net: nA, path: [M5.bot, MN1A.top]}
+  - {net: nA, path: [M1A.bot, [1.6, 4.0], [9.4, 4.0]]}
+  - {net: nB, path: [M6.bot, MN2A.top]}
+  - {net: nB, path: [M2A.bot, [7.6, 3.7], [12.2, 3.7]]}
   # --- stack internals ---
   - {net: nA3, path: [M9.bot, M7.top]}
   - {net: nB3, path: [M10.bot, M8.top]}
   - {net: nA2, path: [M7.bot, M5.top]}
   # --- mirror-gate bus nA2 -> M9/M10 gates (top route) ---
-  - {net: nA2, path: [[7.2, 6.4], [6.4, 6.4], [6.4, 10.0], [11.0, 10.0], [11.0, 9.2], M10.gate]}
-  - {net: nA2, path: [[6.4, 9.2], M9.gate]}
-  # --- gp: M8 drain -> V_AB.P -> MP_O gate ---
-  - {net: gp, path: [M8.bot, [10.2, 6.62], [12.4, 6.62], [12.4, 8.0], MP_O.gate]}
-  # --- gn: M6 drain -> V_AB.N -> MN_O gate (+ comp tap) ---
-  - {net: gn, path: [M6.top, [10.2, 6.1], [12.0, 6.1], [12.0, 4.6], MN_O.gate]}
-  - {net: gn, path: [[12.0, 4.6], [12.0, 3.25], [13.6, 3.25]]}
-  # --- OUT: push-pull drains -> CL + comp return ---
+  - {net: nA2, path: [[9.4, 6.7], [8.3, 6.7], [8.3, 10.05], [13.0, 10.05], [13.0, 9.3], M10.gate]}
+  - {net: nA2, path: [[8.3, 9.3], M9.gate]}
+  # --- class-AB ladder: M8.D - V_AB - M6.D, with gp/gn taps ---
+  - {net: gp, path: [M8.bot, VAB.plus]}
+  - {net: gn, path: [VAB.minus, M6.top]}
+  - {net: gp, path: [[12.2, 7.08], [14.3, 7.08], [14.3, 8.2], MP_O.gate]}
+  - {net: gn, path: [[12.2, 6.37], [14.0, 6.37], [14.0, 4.8], MN_O.gate]}
+  # --- compensation: gn -> Cc+Rz -> OUT ---
+  - {net: gn,  path: [[14.0, 4.8], [14.0, 3.08], COMP.A]}
+  - {net: OUT, path: [COMP.B, [16.35, 3.08], [16.35, 5.9], [15.0, 5.9]]}
+  # --- OUT column + load + port ---
   - {net: OUT, path: [MP_O.bot, MN_O.top]}
-  - {net: OUT, path: [[13.2, 6.3], [15.1, 6.3]]}
-  - {net: OUT, path: [[14.6, 6.3], [14.6, 6.85]]}
-  - {net: OUT, path: [[15.2, 3.25], [15.85, 3.25], [15.85, 5.6], [14.6, 5.6], [14.6, 6.3]]}
+  - {net: OUT, path: [[15.0, 6.65], CL.T]}
+  - {net: OUT, path: [[15.35, 6.65], [15.35, 7.1]]}
 
-dots: [[3.9, 8.1], [1.8, 8.1], [3.0, 8.1], [4.6, 8.1], [2.4, 7.2], [5.3, 7.2],
-       [1.8, 4.6], [6.0, 4.3], [7.2, 6.4], [6.4, 9.2], [10.7, 6.62], [10.7, 6.1],
-       [12.0, 4.6], [13.2, 6.3], [14.6, 6.3]]
+dots: [[4.2, 8.3], [3.6, 8.3], [5.6, 8.3], [2.6, 7.3], [6.6, 7.3],
+       [9.4, 4.0], [12.2, 3.7], [9.4, 6.7], [8.3, 9.3],
+       [12.2, 7.08], [12.2, 6.37], [14.0, 4.8],
+       [15.0, 6.65], [15.35, 6.65], [15.0, 5.9]]
 
 bias_pins: []
 
 ports:
-  - {at: M0.gate,  name: "Vb_tail", kind: bias}
+  - {at: M0.gate,  name: "Vb_tail", kind: bias, tside: left}
   - {at: M7.gate,  name: "Vb_pc", kind: bias}
-  - {at: M8.gate,  name: "Vb_pc", kind: bias}
+  - {at: M8.gate,  name: "Vb_pc", kind: bias, tside: left}
   - {at: M5.gate,  name: "Vb_nc", kind: bias}
-  - {at: M6.gate,  name: "Vb_nc", kind: bias}
-  - {xy: [2.4, 6.85],  name: "VIN+", kind: in}
-  - {xy: [5.3, 6.85],  name: "VIN-", kind: in}
-  - {xy: [14.6, 6.85], name: "OUT", kind: out}
+  - {at: M6.gate,  name: "Vb_nc", kind: bias, tside: left}
+  - {xy: [2.6, 6.95],  name: "VIN-", kind: in}
+  - {xy: [6.6, 6.95],  name: "VIN+", kind: in}
+  - {xy: [15.35, 7.1], name: "OUT", kind: out}
 
 notes:
-  - "Stage 1 = OTA_V2's RFC scaled to FC power (~2.1uA): split input pair + cross-coupled 1:K recycling mirrors, Gm=(1+K)*gm_half."
-  - "V_AB floating battery rides between cascode output taps gp (M8 drain) and gn (M6 drain): both output gates see the same signal, DC offset sets push-pull quiescent (class-AB)."
-  - "Miller Cc+Rz from OUT back to gn. Slew: output devices overdrive far beyond IQ -> SR decoupled from static power; swing near rail-to-rail."
+  - "Stage 1 = OTA_V2's RFC at FC power (~2.1uA). A-halves sit directly above their mirror sinks so nA/nB are straight columns; the cross-coupling needs exactly one wire crossing (x1 over x2)."
+  - "V_AB circle = ideal Monticelli floating battery (0.85V): both output gates see the same signal, DC offset sets the push-pull quiescent (IQ~1.8uA)."
+  - "Bulk leads drawn but unlabeled: ALL PMOS bulks=VDD, ALL NMOS bulks=VSS (no DBB in this design)."

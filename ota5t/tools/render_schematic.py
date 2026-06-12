@@ -18,6 +18,21 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Polygon, Circle, Rectangle
 
 RED, BLUE, WIRE, RAIL = "#c0392b", "#2c6fbf", "#222", "#444"
+DEV_COLOR = {"pmos": RED, "nmos": BLUE}
+SYM_DIR = Path(__file__).resolve().parent / "symbols"
+_SYM_CACHE: dict[str, dict] = {}
+
+
+def load_symbol(kind: str, vclass: str) -> dict:
+    """Load a MOS symbol cell (tools/symbols/<kind>_<vclass>.yaml), cached."""
+    key = f"{kind}_{vclass}"
+    if key not in _SYM_CACHE:
+        path = SYM_DIR / f"{key}.yaml"
+        if not path.exists():
+            raise SystemExit(f"symbol cell not found: {path}")
+        _SYM_CACHE[key] = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return _SYM_CACHE[key]
+
 
 if len(sys.argv) < 2:
     sys.exit("usage: render_schematic.py <spec.yaml>")
@@ -34,32 +49,62 @@ def main():
     def line(x1, y1, x2, y2, c=WIRE, w=1.3):
         ax.add_line(Line2D([x1, x2], [y1, y2], color=c, lw=w, solid_capstyle="round"))
 
-    # ---- devices: draw symbols, collect terminal coords ----
+    # ---- devices: instantiate MOS symbol cells from tools/symbols/ ----
+    # Each device picks cell "<kind>_<vclass>" (vclass default 2v). The cell is
+    # drawn in a gate-on-LEFT frame; gate:"right" mirrors it in x. Terminal
+    # anchors (top/bot/gate/bulk) come from the cell so wiring stays valid.
     term: dict[str, dict] = {}
     for d in S["devices"]:
         cx, cy = d["x"], d["y"]
-        col = RED if d["kind"] == "pmos" else BLUE
-        s = 0.30
-        line(cx, cy - s, cx, cy + s, col, 2.6)                      # channel
-        gx = cx - 0.15 if d["gate"] == "left" else cx + 0.15
-        gt = cx - 0.55 if d["gate"] == "left" else cx + 0.55
-        line(gx, cy - s, gx, cy + s, WIRE, 1.7)                     # gate bar
-        line(gx, cy, gt, cy, WIRE, 1.2)                             # gate lead
-        line(cx, cy + s, cx, cy + 0.55, WIRE, 1.2)                  # top lead
-        line(cx, cy - s, cx, cy - 0.55, WIRE, 1.2)                  # bottom lead
-        # source arrow (pmos: top, nmos: bottom)
-        if d["kind"] == "pmos":
-            ax.add_patch(Polygon([(cx, cy + s), (cx - 0.1, cy + s + 0.14),
-                                  (cx + 0.1, cy + s + 0.14)], color=col, zorder=4))
-        else:
-            ax.add_patch(Polygon([(cx, cy - s), (cx - 0.1, cy - s - 0.14),
-                                  (cx + 0.1, cy - s - 0.14)], color=col, zorder=4))
-        lx = cx + 0.62 if d["label"] == "right" else cx - 0.62
+        kind = d["kind"]
+        vclass = str(d.get("vclass", "2v")).lower()
+        col = DEV_COLOR[kind]
+        cell = load_symbol(kind, vclass)
+        sx = -1 if d["gate"] == "right" else 1          # mirror to put gate on right
+        cmap = {"d": col, "w": WIRE}
+        a = cell["anchors"]
+        # Place the cell so the D/S column lands exactly on the device's (x,y).
+        # The channel sits to the side to make room for the offset stubs, but
+        # top/bot anchors stay at cx so existing wiring needs no change.
+        ds_off = a["top"][0]
+        ox = cx - sx * ds_off
+
+        for pr in cell["prims"]:
+            t = pr[0]
+            if t == "L":
+                _, x1, y1, x2, y2, lw, ck = pr
+                line(ox + sx * x1, cy + y1, ox + sx * x2, cy + y2, cmap[ck], lw)
+            elif t == "C":
+                _, x0, y0, r, ck = pr
+                ax.add_patch(Circle((ox + sx * x0, cy + y0), r, fill=False,
+                                    edgecolor=cmap[ck], lw=1.3, zorder=4))
+            elif t == "R":   # hollow rectangle (5V gate plate). [R, x0,y0,w,h,lw,ck]
+                _, x0, y0, rw, rh, lw, ck = pr
+                wx = ox + (sx * x0 if sx > 0 else sx * (x0 + rw))
+                ax.add_patch(Rectangle((wx, cy + y0), rw, rh, fill=False,
+                                       edgecolor=cmap[ck], lw=lw, zorder=4))
+
+        term[d["name"]] = {
+            "top":  (ox + sx * a["top"][0],  cy + a["top"][1]),
+            "bot":  (ox + sx * a["bot"][0],  cy + a["bot"][1]),
+            "gate": (ox + sx * a["gate"][0], cy + a["gate"][1]),
+            "bulk": (ox + sx * a["bulk"][0], cy + a["bulk"][1]),
+        }
+        lx = cx + 0.66 if d["label"] == "right" else cx - 0.66
         ax.text(lx, cy + 0.34, d["name"], fontsize=12.5, fontweight="bold",
                 color=col, ha="left" if d["label"] == "right" else "right",
                 va="center", zorder=7)
-        term[d["name"]] = {"top": (cx, cy + 0.55), "bot": (cx, cy - 0.55),
-                           "gate": (gt, cy)}
+
+    # ---- ideal voltage sources (circle, +/- marks), e.g. floating V_AB ----
+    for v in S.get("vsources", []):
+        vx, vy, r = v["x"], v["y"], 0.22
+        ax.add_patch(Circle((vx, vy), r, facecolor="white", edgecolor=WIRE,
+                            lw=1.4, zorder=5))
+        ax.text(vx, vy + 0.10, "+", fontsize=8, ha="center", va="center", zorder=6)
+        ax.text(vx, vy - 0.10, "−", fontsize=8, ha="center", va="center", zorder=6)
+        ax.text(vx + r + 0.08, vy, v.get("name", ""), fontsize=8.5, color="#555",
+                ha="left", va="center", zorder=6)
+        term[v["name"]] = {"plus": (vx, vy + r), "minus": (vx, vy - r)}
 
     # ---- blocks (sub-cells drawn as labelled boxes; pins resolvable as Name.Pin) ----
     for b in S.get("blocks", []):
@@ -130,8 +175,10 @@ def main():
         k = p["kind"]
         if k == "bias":                       # bias node: small dot + label, no arrow
             ax.add_patch(Circle((x, y), 0.07, color="#b08000", zorder=7))
-            ax.text(x + 0.15, y, p["name"], fontsize=9.5, color="#b08000",
-                    fontweight="bold", ha="left", va="center")
+            tl = p.get("tside", "right") == "left"   # label side (default right)
+            ax.text(x + (-0.15 if tl else 0.15), y, p["name"], fontsize=9.5,
+                    color="#b08000", fontweight="bold",
+                    ha="right" if tl else "left", va="center")
             continue
         out = k == "out"
         c = "#1a7f37" if out else "#8250df"

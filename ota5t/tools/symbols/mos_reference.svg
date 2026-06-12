@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MOS schematic symbol reference (hand-authored, explicit coordinates).
+  Structure:
+    - gate metal: vertical bar (2V) OR thin hollow rectangle (5V), + horizontal lead to "G"
+    - small gap, then channel: vertical bar
+    - three horizontal stubs off the channel: top->up to D, middle->B, bottom->down to S
+    - PMOS only: a small circle between the gate lead and the gate
+    - NO bulk arrow (device type is shown by the PMOS gate circle)
+  Layout: top row 2V (NMOS | PMOS), bottom row 5V (NMOS | PMOS). y is DOWN.
+  Edit any coordinate below and reopen to review.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 560" font-family="Arial, sans-serif">
+  <rect x="0" y="0" width="620" height="560" fill="white"/>
+
+  <!-- ===================== 2V NMOS (top-left) ===================== -->
+  <g stroke="black" stroke-width="4" fill="none" stroke-linecap="round">
+    <line x1="120" y1="90"  x2="120" y2="170"/>   <!-- gate bar (single line = 2V) -->
+    <line x1="145" y1="90"  x2="145" y2="170"/>   <!-- channel bar -->
+    <line x1="60"  y1="130" x2="120" y2="130"/>   <!-- gate lead -->
+    <line x1="145" y1="100" x2="185" y2="100"/><line x1="185" y1="100" x2="185" y2="50"/>  <!-- D -->
+    <line x1="145" y1="130" x2="235" y2="130"/>   <!-- B -->
+    <line x1="145" y1="160" x2="185" y2="160"/><line x1="185" y1="160" x2="185" y2="210"/> <!-- S -->
+  </g>
+  <g font-size="24" font-weight="bold" fill="black">
+    <text x="20" y="22">2V NMOS</text>
+    <text x="38" y="138">G</text><text x="176" y="40">D</text><text x="248" y="138">B</text><text x="176" y="234">S</text>
+  </g>
+
+  <!-- ===================== 2V PMOS (top-right) ==================== -->
+  <g stroke="black" stroke-width="4" fill="none" stroke-linecap="round">
+    <line x1="440" y1="90"  x2="440" y2="170"/>   <!-- gate bar -->
+    <line x1="465" y1="90"  x2="465" y2="170"/>   <!-- channel bar -->
+    <line x1="380" y1="130" x2="416" y2="130"/>   <!-- gate lead (to circle) -->
+    <circle cx="426" cy="130" r="10"/>            <!-- PMOS gate circle -->
+    <line x1="465" y1="100" x2="505" y2="100"/><line x1="505" y1="100" x2="505" y2="50"/>
+    <line x1="465" y1="130" x2="555" y2="130"/>
+    <line x1="465" y1="160" x2="505" y2="160"/><line x1="505" y1="160" x2="505" y2="210"/>
+  </g>
+  <g font-size="24" font-weight="bold" fill="black">
+    <text x="360" y="22">2V PMOS</text>
+    <text x="356" y="138">G</text><text x="496" y="40">D</text><text x="568" y="138">B</text><text x="496" y="234">S</text>
+  </g>
+
+  <!-- ===================== 5V NMOS (bottom-left) ================== -->
+  <g stroke="black" stroke-width="4" fill="none" stroke-linecap="round">
+    <rect x="113" y="390" width="14" height="80"/> <!-- gate = thin hollow rectangle (5V) -->
+    <line x1="145" y1="390" x2="145" y2="470"/>     <!-- channel bar -->
+    <line x1="60"  y1="430" x2="113" y2="430"/>     <!-- gate lead -->
+    <line x1="145" y1="400" x2="185" y2="400"/><line x1="185" y1="400" x2="185" y2="350"/>
+    <line x1="145" y1="430" x2="235" y2="430"/>
+    <line x1="145" y1="460" x2="185" y2="460"/><line x1="185" y1="460" x2="185" y2="510"/>
+  </g>
+  <g font-size="24" font-weight="bold" fill="black">
+    <text x="20" y="322">5V NMOS</text>
+    <text x="38" y="438">G</text><text x="176" y="340">D</text><text x="248" y="438">B</text><text x="176" y="534">S</text>
+  </g>
+
+  <!-- ===================== 5V PMOS (bottom-right) ================= -->
+  <g stroke="black" stroke-width="4" fill="none" stroke-linecap="round">
+    <rect x="433" y="390" width="14" height="80"/> <!-- gate = thin hollow rectangle (5V) -->
+    <line x1="465" y1="390" x2="465" y2="470"/>     <!-- channel bar -->
+    <line x1="380" y1="430" x2="414" y2="430"/>     <!-- gate lead (to circle) -->
+    <circle cx="424" cy="430" r="10"/>              <!-- PMOS gate circle -->
+    <line x1="465" y1="400" x2="505" y2="400"/><line x1="505" y1="400" x2="505" y2="350"/>
+    <line x1="465" y1="430" x2="555" y2="430"/>
+    <line x1="465" y1="460" x2="505" y2="460"/><line x1="505" y1="460" x2="505" y2="510"/>
+  </g>
+  <g font-size="24" font-weight="bold" fill="black">
+    <text x="360" y="322">5V PMOS</text>
+    <text x="356" y="438">G</text><text x="496" y="340">D</text><text x="568" y="438">B</text><text x="496" y="534">S</text>
+  </g>
+</svg>

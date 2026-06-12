@@ -1,0 +1,16 @@
+# MOS symbol cell: 2V NMOS -- faithful to the reference (three-stub style).
+# Frame: channel centre at origin, gate LEFT. D/S leave the channel via short
+# horizontal stubs then turn up/down (offset +0.20 from the channel axis); B
+# leaves the middle to the right. NMOS has NO gate circle; no bulk arrow.
+name: nmos_2v
+kind: nmos
+anchors: {top: [0.20, 0.55], bot: [0.20, -0.55], gate: [-0.42, 0.0], bulk: [0.46, 0.0]}
+prims:
+  - [L, 0.0, -0.30, 0.0, 0.30, 2.6, d]      # channel bar
+  - [L, -0.16, -0.30, -0.16, 0.30, 1.8, w]  # gate bar (single line = 2V)
+  - [L, -0.16, 0.0, -0.42, 0.0, 1.3, w]     # gate lead (short)
+  - [L, 0.0, 0.22, 0.20, 0.22, 1.3, w]      # top stub (channel -> corner)
+  - [L, 0.20, 0.22, 0.20, 0.55, 1.3, w]     # drain lead (up to D)
+  - [L, 0.0, 0.0, 0.46, 0.0, 1.2, w]        # middle stub -> B (plain, no arrow)
+  - [L, 0.0, -0.22, 0.20, -0.22, 1.3, w]    # bottom stub (channel -> corner)
+  - [L, 0.20, -0.22, 0.20, -0.55, 1.3, w]   # source lead (down to S)

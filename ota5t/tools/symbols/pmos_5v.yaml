@@ -1,0 +1,15 @@
+# MOS symbol cell: 5V PMOS -- three-stub style, gate is a thin HOLLOW RECTANGLE
+# plus the PMOS gate circle.
+name: pmos_5v
+kind: pmos
+anchors: {top: [0.20, 0.55], bot: [0.20, -0.55], gate: [-0.58, 0.0], bulk: [0.46, 0.0]}
+prims:
+  - [L, 0.0, -0.30, 0.0, 0.30, 2.6, d]      # channel bar
+  - [R, -0.27, -0.30, 0.12, 0.60, 1.7, w]   # gate plate: thin hollow rectangle (5V)
+  - [C, -0.325, 0.0, 0.055, w]              # gate circle (PMOS marker)
+  - [L, -0.38, 0.0, -0.58, 0.0, 1.3, w]     # gate lead (short, after circle)
+  - [L, 0.0, 0.22, 0.20, 0.22, 1.3, w]      # top stub
+  - [L, 0.20, 0.22, 0.20, 0.55, 1.3, w]     # drain lead (up to D)
+  - [L, 0.0, 0.0, 0.46, 0.0, 1.2, w]        # middle stub -> B
+  - [L, 0.0, -0.22, 0.20, -0.22, 1.3, w]    # bottom stub
+  - [L, 0.20, -0.22, 0.20, -0.55, 1.3, w]   # source lead (down to S)
